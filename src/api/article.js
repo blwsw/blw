@@ -47,3 +47,10 @@ export function fetchEventLog(obj) {
     params: obj
   })
 }
+export function fetchEvent(obj) {
+  return request({
+    url: '/' + obj.url,
+    method: 'get',
+    params: obj.data
+  })
+}
