@@ -5,7 +5,11 @@
     <el-tabs v-model="activeName" style="" type="border-card">
       <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key">
         <keep-alive>
-          <tab-pane v-if="activeName==item.key" :type="item.key" @getDataList="getList" @create="showCreatedTimes" :dataList="dataList" />
+          <TabPane v-if="'L1'==item.key" :type="item.key" @getDataList="getList" @create="showCreatedTimes" :dataList="dataList" />
+          <TabPaneL2 v-if="'L2'==item.key" :type="item.key" @getDataList="getList" @create="showCreatedTimes" :dataList="dataList" />
+          <TabPaneL3 v-if="'L3'==item.key" :type="item.key" @getDataList="getList" @create="showCreatedTimes" :dataList="dataList" />
+          <TabPanelldl v-if="'L4'==item.key" :type="item.key" @getDataList="getList" @create="showCreatedTimes" :dataList="dataList" />
+          <TabPane v-if="'L5'==item.key" :type="item.key" @getDataList="getList" @create="showCreatedTimes" :dataList="dataList" />
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
@@ -14,11 +18,14 @@
 
 <script>
 import TabPane from './components/TabPane'
+import TabPaneL3 from './components/TabPaneL3'
+import TabPaneL2 from './components/TabPaneL2'
+import TabPanelldl from './components/TabPanelldl'
 import {fetchEvent} from "@/api/article";
 
 export default {
   name: 'Tab',
-  components: { TabPane },
+  components: { TabPane, TabPaneL2, TabPaneL3, TabPanelldl },
   data() {
     return {
       tabMapOptions: [

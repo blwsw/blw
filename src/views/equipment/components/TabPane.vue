@@ -30,17 +30,31 @@
         <span>{{ row.pdcNo }}</span>
       </template>
     </el-table-column>
-    <el-table-column width="150px" align="center" label="时间">
-      <template slot-scope="scope">
-        <span>{{ scope.row.In_Time }}</span>
-      </template>
-    </el-table-column>
 
-    <el-table-column min-width="50px" label="雷击次数" show-overflow-tooltip>
-      <template slot-scope="{row}">
-        <span>{{ row.TTime }}</span>
-      </template>
-    </el-table-column>
+      <el-table-column v-if="'L1' == type" width="160px" align="center" label="时间" >
+        <template slot-scope="scope">
+          <span>{{ scope.row.In_Time }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column v-if="'L1' == type" min-width="50px" label="雷击次数" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span>{{ row.TTime }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column v-if="'L5' == type" width="160px" align="center" label="时间">
+        <template slot-scope="scope">
+          <span>{{ scope.row.In_Time }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column v-if="'L5' == type" min-width="50px" label="劣化状态" show-overflow-tooltip >
+        <template slot-scope="{row}">
+          <span>{{ row.ErrLeihua }}</span>
+        </template>
+      </el-table-column>
+
 
     <el-table-column width="110px" align="center" label="安装位置">
       <template slot-scope="scope">
@@ -98,9 +112,10 @@ export default {
     }
   },
   created() {
-    // this.getList()
+    debugger
     if(!this.dataList || this.dataList.length == 0){
-      this.$emit('getDataList')
+      //this.$emit('getDataList')
+      this.getList()
     }
     this.list = this.dataList
   },

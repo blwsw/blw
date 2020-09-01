@@ -30,22 +30,12 @@
         <span>{{ row.pdcNo }}</span>
       </template>
     </el-table-column>
-    <el-table-column width="150px" align="center" label="泄露电流1">
-      <template slot-scope="scope">
-        <span>{{ scope.row.LCurrent1 }}</span>
+    <el-table-column min-width="50px" label="实时温度" show-overflow-tooltip>
+      <template slot-scope="{row}">
+        <span>{{ row.OTemp }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column min-width="50px" label="泄露电流2" show-overflow-tooltip>
-      <template slot-scope="{row}">
-        <span>{{ row.LCurrent2 }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column min-width="50px" label="泄露电流3" show-overflow-tooltip>
-      <template slot-scope="{row}">
-        <span>{{ row.LCurrent3 }}</span>
-      </template>
-    </el-table-column>
     <el-table-column width="110px" align="center" label="安装位置">
       <template slot-scope="scope">
         <span>{{ scope.row.address }}</span>

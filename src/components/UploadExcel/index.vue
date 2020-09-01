@@ -2,9 +2,12 @@
   <div>
     <input ref="excel-upload-input" class="excel-upload-input" type="file" accept=".xlsx, .xls" @change="handleClick">
     <div class="drop" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">
-      Drop excel file here or
+      将excel文件拖到此处或
       <el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" @click="handleUpload">
-        Browse
+        浏览
+      </el-button>
+      <el-button :loading="loading" style="margin:0 0 20px 20px;" type="primary" icon="el-icon-document" @click="doUpload" >
+        确定上传
       </el-button>
     </div>
   </div>
@@ -12,15 +15,17 @@
 
 <script>
 import XLSX from 'xlsx'
-
+import axios from 'axios'
 export default {
   props: {
     beforeUpload: Function, // eslint-disable-line
     onSuccess: Function// eslint-disable-line
+
   },
   data() {
     return {
       loading: false,
+      newFile:null,
       excelData: {
         header: null,
         results: null
@@ -68,7 +73,7 @@ export default {
     },
     upload(rawFile) {
       this.$refs['excel-upload-input'].value = null // fix can't select the same excel
-
+      this.newFile = rawFile;
       if (!this.beforeUpload) {
         this.readerData(rawFile)
         return
@@ -113,6 +118,33 @@ export default {
     },
     isExcel(file) {
       return /\.(xlsx|xls|csv)$/.test(file.name)
+    },
+    doUpload(){
+      let file = this.newFile;
+      if(!file){
+        return;
+      }
+      var formData = new FormData();
+      formData.append("file", file);
+      formData.append("operatorId", 2);//需要上传的多个参数
+      return new Promise((resolve,reject)=>{
+        axios.post(process.env.VUE_APP_BASE_API+`/files`,
+          formData,
+          {
+            headers:{
+              'Content-Type': 'multipart/form-data; boundary = ' + new Date().getTime()
+              //这里要把content-type设置为multipard/form-data，同时还要设置boundary
+            }
+          }).then(result=>{
+          this.$message({
+            message: '上传成功.',
+            type: 'warning'
+          })
+          resolve(result.data)
+        }).catch(err=>{
+          reject(err)
+        })
+      })
     }
   }
 }

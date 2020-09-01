@@ -113,7 +113,7 @@ export const asyncRoutes = [
     meta: {
       title: '用户管理',
       icon: 'peoples',
-      roles: ['admin', 'editor'] // you can set roles in root nav
+      roles: ['admin', 'editor', 'blw'] // you can set roles in root nav
     },
     children: [
       {
@@ -122,7 +122,7 @@ export const asyncRoutes = [
         name: 'user-manager',
         meta: {
           title: '用户管理',
-          roles: ['admin', 'editor'] // or you can only set roles in sub nav
+          roles: ['admin', 'editor', 'blw'] // or you can only set roles in sub nav
         }
       }
 
@@ -137,7 +137,7 @@ export const asyncRoutes = [
     meta: {
       title: '雷电防护系统',
       icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
+      roles: ['admin', 'editor', 'blw'] // you can set roles in root nav
     },
     children: [
       {
@@ -146,7 +146,7 @@ export const asyncRoutes = [
         name: 'statusAnalysis',
         meta: {
           title: '设备状态概览',
-          roles: ['admin'] // or you can only set roles in sub nav
+          roles: ['admin', 'blw', 'editor'] // or you can only set roles in sub nav
         }
       },
       {
@@ -166,6 +166,15 @@ export const asyncRoutes = [
           title: '设备状态数据'
           // roles: ['admin']
         }
+      },
+      {
+        path: 'device-manage',
+        component: () => import('@/views/device-manage/upload-device'),
+        name: 'deviceManage',
+        meta: {
+          title: '设备管理',
+          roles: ['admin', 'editor', 'blw']
+        }
       }
     ]
   },
@@ -180,12 +189,12 @@ export const asyncRoutes = [
         path: 'logs',
         component: () => import('@/views/logs/index'),
         name: 'logsQuery',
-        meta: { title: '日志查询', icon: 'dashboard'}
+        meta: { title: '日志查询', icon: 'dashboard',roles: ['admin', 'editor', 'blw']}
       },{
         path: '/logs/detail',
         name: 'logsDetail',
         component: () => import('@/views/logs/logsDetail.vue'),
-        meta: { title: '日志详情', icon: 'dashboard'},
+        meta: { title: '日志详情', icon: 'dashboard',roles: ['admin', 'editor', 'blw']},
         hidden: true
       }
     ]
@@ -199,7 +208,7 @@ export const asyncRoutes = [
     meta: {
       title: 'permission',
       icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
+      roles: ['admin', 'editor', 'blw'] // you can set roles in root nav
     },
     children: [
       {
@@ -208,7 +217,7 @@ export const asyncRoutes = [
         name: 'PagePermission',
         meta: {
           title: 'pagePermission',
-          roles: ['admin'] // or you can only set roles in sub nav
+          roles: ['admin', 'blw'] // or you can only set roles in sub nav
         }
       },
       {
@@ -216,7 +225,8 @@ export const asyncRoutes = [
         component: () => import('@/views/permission/directive'),
         name: 'DirectivePermission',
         meta: {
-          title: 'directivePermission'
+          title: 'directivePermission',
+          roles: ['blw']
           // if do not set roles, means: this page does not require permission
         }
       },
@@ -226,7 +236,7 @@ export const asyncRoutes = [
         name: 'RolePermission',
         meta: {
           title: 'rolePermission',
-          roles: ['admin']
+          roles: ['blw']
         }
       }
     ]
@@ -240,7 +250,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/icons/index'),
         name: 'Icons',
-        meta: { title: 'icons', icon: 'icon', noCache: true }
+        meta: { title: 'icons', icon: 'icon', noCache: true ,roles: ['blw']}
       }
     ]
   },
@@ -258,7 +268,8 @@ export const asyncRoutes = [
     name: 'Example',
     meta: {
       title: 'example',
-      icon: 'el-icon-s-help'
+      icon: 'el-icon-s-help',
+      roles: ['blw']
     },
     children: [
       {
@@ -291,7 +302,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/tab/index'),
         name: 'Tab',
-        meta: { title: 'tab', icon: 'tab' }
+        meta: { title: 'tab', icon: 'tab' ,roles: ['blw']}
       }
     ]
   },
@@ -303,7 +314,8 @@ export const asyncRoutes = [
     name: 'ErrorPages',
     meta: {
       title: 'errorPages',
-      icon: '404'
+      icon: '404',
+      roles: ['blw']
     },
     children: [
       {
@@ -329,7 +341,7 @@ export const asyncRoutes = [
         path: 'log',
         component: () => import('@/views/error-log/index'),
         name: 'ErrorLog',
-        meta: { title: 'errorLog', icon: 'bug' }
+        meta: { title: 'errorLog', icon: 'bug',roles: ['blw'] }
       }
     ]
   },
@@ -341,7 +353,8 @@ export const asyncRoutes = [
     name: 'Excel',
     meta: {
       title: 'excel',
-      icon: 'excel'
+      icon: 'excel',
+      roles: ['blw']
     },
     children: [
       {
@@ -377,7 +390,7 @@ export const asyncRoutes = [
     redirect: '/zip/download',
     alwaysShow: true,
     name: 'Zip',
-    meta: { title: 'zip', icon: 'zip' },
+    meta: { title: 'zip', icon: 'zip' ,roles: ['blw']},
     children: [
       {
         path: 'download',
@@ -397,7 +410,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/pdf/index'),
         name: 'PDF',
-        meta: { title: 'pdf', icon: 'pdf' }
+        meta: { title: 'pdf', icon: 'pdf',roles: ['blw'] }
       }
     ]
   },
@@ -415,7 +428,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/theme/index'),
         name: 'Theme',
-        meta: { title: 'theme', icon: 'theme' }
+        meta: { title: 'theme', icon: 'theme',roles: ['blw'] }
       }
     ]
   },
@@ -428,7 +441,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/clipboard/index'),
         name: 'ClipboardDemo',
-        meta: { title: 'clipboardDemo', icon: 'clipboard' }
+        meta: { title: 'clipboardDemo', icon: 'clipboard' ,roles: ['blw']}
       }
     ]
   },
@@ -441,7 +454,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/i18n-demo/index'),
         name: 'I18n',
-        meta: { title: 'i18n', icon: 'international' }
+        meta: { title: 'i18n', icon: 'international',roles: ['blw'] }
       }
     ]
   },
@@ -452,7 +465,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'https://github.com/PanJiaChen/vue-element-admin',
-        meta: { title: 'externalLink', icon: 'link' }
+        meta: { title: 'externalLink', icon: 'link',roles: ['blw'] }
       },
     ]
   },

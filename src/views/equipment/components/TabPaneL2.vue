@@ -30,20 +30,14 @@
         <span>{{ row.pdcNo }}</span>
       </template>
     </el-table-column>
-    <el-table-column width="150px" align="center" label="泄露电流1">
+    <el-table-column min-width="50px" label="雷击电流" show-overflow-tooltip>
+      <template slot-scope="{row}">
+        <span>{{ row.TCurrent }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column width="160px" align="center" label="发生时间">
       <template slot-scope="scope">
-        <span>{{ scope.row.LCurrent1 }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column min-width="50px" label="泄露电流2" show-overflow-tooltip>
-      <template slot-scope="{row}">
-        <span>{{ row.LCurrent2 }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column min-width="50px" label="泄露电流3" show-overflow-tooltip>
-      <template slot-scope="{row}">
-        <span>{{ row.LCurrent3 }}</span>
+        <span>{{ scope.row.In_Time }}</span>
       </template>
     </el-table-column>
     <el-table-column width="110px" align="center" label="安装位置">
