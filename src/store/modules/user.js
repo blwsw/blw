@@ -10,6 +10,7 @@ const state = {
   introduction: '',
   roles: [],
   uid: '',
+  userId:'',
   refreshToken: getTokenData("refreshToken"),
 }
 
@@ -34,6 +35,9 @@ const mutations = {
   },
   SET_UID: (state, uid) => {
     state.uid = uid
+  },
+  SET_USERID: (state, userId) => {
+    state.userId = userId
   }
 }
 
@@ -47,6 +51,7 @@ const actions = {
         commit('SET_TOKEN', data.token)
         commit('SET_REFRESH_TOKEN', data.refreshToken)
 
+        commit('SET_USERID', data.user.id)
         commit('SET_UID', data.user.uid)
         //commit('SET_AVATAR', data.user)
         setToken(data.token)
@@ -83,7 +88,7 @@ const actions = {
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
-
+        commit('SET_USERID', data.user.id)
         commit('SET_ROLES', roles)
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)

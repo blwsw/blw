@@ -169,12 +169,18 @@ export const asyncRoutes = [
       },
       {
         path: 'device-manage',
-        component: () => import('@/views/device-manage/upload-device'),
+        component: () => import('@/views/device-manage/device-manage'),
         name: 'deviceManage',
         meta: {
           title: '设备管理',
           roles: ['admin', 'editor', 'blw']
         }
+      },{
+        path: 'upload-device',
+        name: 'upload-device',
+        component: () => import('@/views/device-manage/upload-device'),
+        meta: { title: '导入设备', icon: 'dashboard',roles: ['admin', 'editor', 'blw']},
+        hidden: true
       }
     ]
   },

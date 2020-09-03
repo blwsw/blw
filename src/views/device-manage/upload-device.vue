@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" />
+    <upload-excel-component :on-handle-save="handleSave" :on-success="handleSuccess" :before-upload="beforeUpload" />
     <div style="float: right;">
-
+h
     </div>
     <el-table :data="tableData" border highlight-current-row style="width: 100%;margin-top:20px;">
       <el-table-column v-for="item of tableHeader" :key="item" :prop="item" :label="item" />
@@ -40,7 +40,15 @@ export default {
       this.tableData = results
       this.tableHeader = header
     },
-
+    handleSave({ results, header }){//保存数据库
+       if(!results){
+         this.$message({
+           message: '没有要保存的内容.',
+           type: 'warning'
+         })
+         return false
+       }
+    }
   }
 }
 </script>

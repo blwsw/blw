@@ -1,28 +1,21 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.title" placeholder="Title" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.importance" placeholder="Imp" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
-      </el-select>
-      <el-select v-model="listQuery.type" placeholder="Type" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
-      </el-select>
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select>
+      <el-input v-model="listQuery.querySring" placeholder="输入节点查询条件" style="width: 50%;" class="filter-item" @keyup.enter.native="handleFilter" />
+
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-        Search
+        查询
       </el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
-        Add
+        新增
+      </el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-upload" @click="handleUpload">
+        导入
       </el-button>
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-        Export
+        导出
       </el-button>
-      <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
-        reviewer
-      </el-checkbox>
+
     </div>
 
     <el-table
@@ -35,63 +28,119 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
+      <el-table-column label="节点编号" prop="addr" sortable="custom" align="center" width="80" :class-name="getSortClass('addr')">
         <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
+          <span>{{ row.addr }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Date" width="150px" align="center">
+      <el-table-column label="名称" width="150px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Title" min-width="150px">
+      <el-table-column label="说明备注" min-width="150px">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
-          <el-tag>{{ row.type | typeFilter }}</el-tag>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.descript }}</span>
+          <el-tag>{{ row.descript | typeFilter }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110px" align="center">
+      <el-table-column label="串口服务器IP" width="110px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.author }}</span>
+          <span>{{ row.serialserver_ip }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="showReviewer" label="Reviewer" width="110px" align="center">
+      <el-table-column label="安装位置" width="110px" align="center">
         <template slot-scope="{row}">
-          <span style="color:red;">{{ row.reviewer }}</span>
+          <span style="color:red;">{{ row.InstallPos }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Imp" width="80px">
+
+      <el-table-column label="串口服务器端口" width="110px" align="center">
         <template slot-scope="{row}">
-          <svg-icon v-for="n in + row.importance" :key="n" icon-class="star" class="meta-item__icon" />
+          <span>{{ row.serialserver_port }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Readings" align="center" width="95">
+
+      <el-table-column label="雷击电流报警设定值" width="110px" align="center">
         <template slot-scope="{row}">
-          <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
-          <span v-else>0</span>
+          <span>{{ row.TCurrentAlarm }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Status" class-name="status-col" width="100">
+      <el-table-column label="温度报警设定值" width="110px" align="center">
         <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
+          <span>{{ row.TAlarm }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="温升限值设定值" width="110px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.TRiseMax }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="漏电流限值" width="110px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.LCurrentMax }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="脱扣" width="110px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.BOut }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="开关量1" width="110px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.Switch1 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="开关量2" width="110px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.Switch2 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="开关量3" width="110px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.Switch3 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="开关量4" width="110px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.Switch4 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="漏电流1" width="110px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.TCurrent1 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="漏电流2" width="110px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.TCurrent2 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="漏电流3" width="110px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.TCurrent3 }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" class-name="status-col" width="100">
+        <template slot-scope="{row}">
+          <el-tag :type="row.delete | statusFilter">
+            {{ row.delete }}
           </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            Edit
+            修改
           </el-button>
-          <el-button v-if="row.status!='published'" size="mini" type="success" @click="handleModifyStatus(row,'published')">
-            Publish
+          <el-button v-if="row.status!='1'" size="mini" type="success" @click="handleModifyStatus(row,'published')">
+            启用
           </el-button>
-          <el-button v-if="row.status!='draft'" size="mini" @click="handleModifyStatus(row,'draft')">
-            Draft
+          <el-button v-if="row.status!='0'" size="mini" @click="handleModifyStatus(row,'draft')">
+            禁用
           </el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            Delete
+            删除
           </el-button>
         </template>
       </el-table-column>
@@ -147,10 +196,10 @@
 </template>
 
 <script>
-import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import { fetchEvent, fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
@@ -166,15 +215,15 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 }, {})
 
 export default {
-  name: 'ComplexTable',
+  name: 'deviceManager',
   components: { Pagination },
   directives: { waves },
   filters: {
-    statusFilter(status) {
+    statusFilter(status) {//0禁用 1启用
       const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
+        1: 'success',
+        //draft: 'info',
+        0: 'danger'
       }
       return statusMap[status]
     },
@@ -189,12 +238,10 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        page: 1,
-        limit: 20,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: '+id'
+        currentPage: 1,
+        pageSize: 20,
+        querySring: undefined,
+        sort: '+addr'
       },
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
@@ -232,14 +279,18 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
-
+      var query={
+        url:"nodes",
+        data:this.listQuery
+      };
+      fetchEvent(query).then(response => {
+        this.list = response.responseBody
+        this.total = response.page.page_total
+        this.listLoading = false
         // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        // setTimeout(() => {
+        //
+        // }, 1.5 * 1000)
       })
     },
     handleFilter() {
@@ -346,6 +397,9 @@ export default {
         this.pvData = response.data.pvData
         this.dialogPvVisible = true
       })
+    },
+    handleUpload(){
+      this.$router.push({ name: 'upload-device', params: { id:"" }}) //
     },
     handleDownload() {
       this.downloadLoading = true

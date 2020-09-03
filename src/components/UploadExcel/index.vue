@@ -6,8 +6,11 @@
       <el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" @click="handleUpload">
         浏览
       </el-button>
-      <el-button :loading="loading" style="margin:0 0 20px 20px;" type="primary" icon="el-icon-document" @click="doUpload" >
-        确定上传
+      <el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" icon="el-icon-document" @click="doUpload" >
+        上传
+      </el-button>
+      <el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" icon="el-icon-upload" @click="doSave" >
+        保存
       </el-button>
     </div>
   </div>
@@ -19,8 +22,8 @@ import axios from 'axios'
 export default {
   props: {
     beforeUpload: Function, // eslint-disable-line
-    onSuccess: Function// eslint-disable-line
-
+    onSuccess: Function,// eslint-disable-line
+    onHandleSave: Function
   },
   data() {
     return {
@@ -118,6 +121,9 @@ export default {
     },
     isExcel(file) {
       return /\.(xlsx|xls|csv)$/.test(file.name)
+    },
+    doSave(){
+      this.onHandleSave(this.excelData);
     },
     doUpload(){
       let file = this.newFile;

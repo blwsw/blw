@@ -22,7 +22,7 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <span>2020-08-16</span>
+          <span>{{currentTime}}</span>
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
@@ -73,6 +73,34 @@ export default {
       'avatar',
       'device'
     ])
+  },
+  data() {
+    return {
+      timer: "",//定义一个定时器的变量
+      currentTime: new Date(), // 获取当前时间
+    };
+  },
+  created() {
+    var _this = this; //声明一个变量指向Vue实例this，保证作用域一致
+    this.timer = setInterval(function() {
+      _this.currentTime = //修改数据date
+        new Date().getFullYear() +
+        "-" +
+        (new Date().getMonth() + 1) +
+        "-" +
+        new Date().getDate() +
+        " " +
+        new Date().getHours() +
+        ":" +
+        new Date().getMinutes() +
+        ": " +
+        new Date().getSeconds();
+    }, 1000);
+  },
+  beforeDestroy() {
+    if (this.timer) {
+      clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
+    }
   },
   methods: {
     toggleSideBar() {
