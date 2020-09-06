@@ -29,7 +29,7 @@
     <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <pie-chart />
+          <pie-chart :chart-data="pieChartData" :azcount="azcount"/>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
@@ -79,6 +79,7 @@ import BarChart from './components/BarChart'
 import TransactionTable from './components/TransactionTable'
 import TodoList from './components/TodoList'
 import BoxCard from './components/BoxCard'
+import {fetchEvent} from "@/api/article";
 
 const lineChartData = {
   newVisitis: {
@@ -112,15 +113,88 @@ export default {
     TodoList,
     BoxCard
   },
+
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: lineChartData.newVisitis,
+      pieChartData:[
+        { value: 0, name: '正常' ,itemStyle:{color:"#65d186"}},
+        { value: 0, name: '故障',itemStyle:{color:"#f29e3c"} },
+        { value: 0, name: '报警' ,itemStyle:{color:"#f67287"}},
+        { value: 0, name: '预警' }
+        ],
+      loading:false,
+      dataList: [],
+      zxcount:0,
+      azcount:0,
+      totalList: [
+        {count:0,lable:"正常台数",icon:"el-icon-video-play"},
+        {count:0,lable:"故障台数",icon:"el-icon-warning"},
+        {count:0,lable:"预警台数",icon:"el-icon-message-solid"},
+        {count:0,lable:"报警台数",icon:"el-icon-sunrise-1"},
+        {count:0,lable:"离线台数",icon:"el-icon-circle-close"},
+      ],
+      //00正常01预警10报警
+      status: [
+        {code:"",value:"未知"},
+        {code:"00",value:"正常"},
+        {code:"01",value:"预警"},
+        {code:"10",value:"报警"},
+      ]
     }
+  },
+  mounted() {
+    this.getList();
   },
   methods: {
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
-    }
+    },
+    getList() {
+      this.loading = true
+      var obj = {
+        url: 'get/reals',
+        data: {
+          currentPage:1,
+          pageSize:10000
+        }
+      }
+      fetchEvent(obj).then(response => {
+        this.dataList = response.responseBody.map((e)=>{
+          // e.ErrLeihuaStatusName = this.getStatusName(e.ErrLeihua);
+          //totalList计算total
+          //故障标志位，T有故障，F无故障，D离线
+          if(e.ErrFlag == 'F'){
+            this.pieChartData[0].value ++;
+          }
+          if(e.ErrFlag == 'T'){
+            this.pieChartData[1].value ++;
+          }
+          if(e.ErrFlag == 'D'){
+            this.totalList[4].count ++;
+          }else{
+            this.zxcount++;
+          }
+          this.azcount++;
+
+          //01预警
+          if(e.ErrThunder=='01' ||e.ErrLeihua=='01' ||e.ErrLC1=='01' ||e.ErrLC2=='01' ||
+            e.ErrTemp=='01' || e.ErrLC3=='01'
+          ){
+            this.pieChartData[3].value ++;
+          }
+
+          //10预警
+          if(e.ErrThunder=='10' ||e.ErrLeihua=='10' ||e.ErrLC1=='10' ||e.ErrLC2=='10' ||
+            e.ErrTemp=='10' || e.ErrLC3=='10'
+          ){
+            this.pieChartData[2].value ++;
+          }
+          return e;
+        });
+        this.loading = false
+      })
+    },
   }
 }
 </script>

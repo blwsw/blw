@@ -34,8 +34,9 @@ export function createArticle(data) {
 
 export function updateArticle(data) {
   return request({
-    url: '/vue-element-admin/article/update',
-    method: 'post',
+    url: '/users/'+data.id,
+    method: 'put',
+    // params:{id:data.id},
     data
   })
 }
@@ -48,9 +49,20 @@ export function fetchEventLog(obj) {
   })
 }
 export function fetchEvent(obj) {
-  return request({
+
+  if(!obj.methods){
+    obj.methods = 'get'
+  }
+  var requestParam = {
     url: '/' + obj.url,
-    method: 'get',
-    params: obj.data
-  })
+    method: obj.methods
+  };
+
+  if(obj.methods =='get'){
+    requestParam['params'] = obj.data;
+  }else{
+    requestParam['data'] = obj.data;
+  }
+
+  return request(requestParam);
 }

@@ -101,7 +101,7 @@ export default {
   mounted() {
     // WebSocket
     if ('WebSocket' in window) {
-      this.websocket = new WebSocket('ws://localhost:18762/websocket/2') //+ this.userName
+      this.websocket = new WebSocket(process.env.VUE_APP_WS_URS+this.$store.state.user.userId) //+ this.userName
       this.initWebSocket()
     } else {
       alert('当前浏览器 Not support websocket')

@@ -20,12 +20,32 @@ export default {
     },
     height: {
       type: String,
-      default: '300px'
+      default: '350px'
+    },
+    autoResize: {
+      type: Boolean,
+      default: true
+    },
+    chartData: {
+      type: Object,
+      required: true
+    },
+    azcount:{
+      type:String,
+      default:0
     }
   },
   data() {
     return {
       chart: null
+    }
+  },
+  watch: {
+    chartData: {
+      deep: true,
+      handler(val) {
+        this.setOptions(val)
+      }
     }
   },
   mounted() {
@@ -43,11 +63,16 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-
+      this.setOptions(this.chartData);
+    },
+    setOptions(picChartData,legendData){
+      if(!legendData){
+        legendData = ['正常', '故障', '报警', '预警'];
+      }
       this.chart.setOption({
         title: {
           text: '系统状态图',
-          subtext: '',
+          subtext: '总台数'+this.azcount+"台",
           left: 'left'
         },
         tooltip: {
@@ -57,23 +82,26 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['正常', '故障', '报警', '预警']
+          data: legendData
         },
         series: [
           {
-            name: 'WEEKLY WRITE ARTICLES',
+            name: '系统状态',
             type: 'pie',
             roseType: 'radius',
-            radius: [15, 95],
-            center: ['50%', '38%'],
-            data: [
-              { value: 320, name: '正常' ,itemStyle:{color:"#65d186"}},
-              { value: 240, name: '故障',itemStyle:{color:"#f29e3c"} },
-              { value: 149, name: '报警' ,itemStyle:{color:"#f67287"}},
-              { value: 100, name: '预警' }
-            ],
+            radius: [15, 90],
+            center: ['50%', '50%'],
+            data: picChartData,
             animationEasing: 'cubicInOut',
-            animationDuration: 2600
+            animationDuration: 2600,
+            label:{
+              normal:{
+                show: true,
+                formatter: '{b} : {c} ({d}%)'
+                //position: 'center',
+                //color:'#4c4a4a',
+              }
+            }
           }
         ],
         itemStyle: {

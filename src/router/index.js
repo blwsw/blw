@@ -150,12 +150,13 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
+        path: 'distribution-list',
+        component: () => import('@/views/equipment/distribution-list'),
+        name: 'DistributionList',
         meta: {
-          title: '设备分布列表'
+          title: '设备分布列表',
           // if do not set roles, means: this page does not require permission
+          roles: ['admin', 'blw', 'editor']
         }
       },
       {
