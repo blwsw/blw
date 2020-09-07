@@ -20,7 +20,7 @@ export default {
     },
     height: {
       type: String,
-      default: '300px'
+      default: '350px'
     },
     autoResize: {
       type: Boolean,
@@ -69,7 +69,7 @@ export default {
           left: 'left'
         },
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
           boundaryGap: false,
           axisTick: {
             show: false
@@ -79,7 +79,7 @@ export default {
           left: 10,
           right: 10,
           bottom: 20,
-          top: 30,
+          top: 60,
           containLabel: true
         },
         tooltip: {
@@ -95,15 +95,19 @@ export default {
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          data: ['年份', '月份']
         },
         series: [{
-          name: 'expected', itemStyle: {
+          name: '年份',
+          itemStyle: {
             normal: {
               color: '#FF005A',
               lineStyle: {
                 color: '#FF005A',
                 width: 2
+              },
+              areaStyle: {
+                color: '#f37e31'
               }
             }
           },
@@ -114,18 +118,18 @@ export default {
           animationEasing: 'cubicInOut'
         },
         {
-          name: 'actual',
+          name: '月份',
           smooth: true,
           type: 'line',
           itemStyle: {
             normal: {
               color: '#3888fa',
               lineStyle: {
-                color: '#3888fa',
+                color: '#8d0cdc',
                 width: 2
               },
               areaStyle: {
-                color: '#f3f8ff'
+                color: '#935fdc'
               }
             }
           },

@@ -27,11 +27,11 @@ export default {
       default: true
     },
     chartData: {
-      type: Object,
+      type: Array,
       required: true
     },
     azcount:{
-      type:String,
+      type:Number,
       default:0
     }
   },
@@ -63,7 +63,7 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-      this.setOptions(this.chartData);
+      this.setOptions(this.chartData,null);
     },
     setOptions(picChartData,legendData){
       if(!legendData){

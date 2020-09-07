@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-editor-container">
-    <div style="margin: 0px 0px 5px 20px;"> 设备状态分析 </div>
+    <div style="margin: 0px 0px 5px 20px;color: #279cd5;"> 设备状态分析 </div>
 
     <el-row :gutter="32">
 
@@ -26,46 +26,49 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="32">
+    <el-row :gutter="1">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <pie-chart :chart-data="pieChartData" :azcount="azcount"/>
         </div>
       </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
+      <el-col :xs="32" :sm="32" :lg="10">
         <div class="chart-wrapper">
 
           <line-chart :chart-data="lineChartData" />
         </div>
       </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <bar-chart />
+      <el-col :xs="16" :sm="16" :lg="6">
+        <div class="chart-wrapper" style="width: 100%;">
+          <div style="margin: 0px 0px 5px 20px;color: #279cd5;"> 设备巡检状态 </div>
+          <el-table id="tableList" :data="dataList" border fit highlight-current-row style="width: 100%;height: 326px;overflow-y: auto;" ref="tablelist">
+            <el-table-column
+              v-loading="loading"
+              align="center"
+              label="序号"
+              min-width="40px"
+              element-loading-text="请给我点时间！"
+
+            >
+              <template slot-scope="srow">
+                <span v-bind:style="{color:srow.row.colorss}" > {{srow.$index+1}} </span>
+              </template>
+            </el-table-column>
+            <el-table-column  min-width="50px" label="节点编号" show-overflow-tooltip >
+              <template slot-scope="{row}">
+                <span v-bind:style="{color:row.colorss}" >{{ row.addr }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column  min-width="50px" label="设备状态" show-overflow-tooltip >
+              <template slot-scope="{row}">
+                <span v-bind:style="{color:row.colorss}"  >{{ row.ErrLeihuaStatusName }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+
         </div>
       </el-col>
     </el-row>
-<!--
-
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
-
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-
-      <raddar-chart />
-    </el-row>
-
-
-    <el-row :gutter="8">
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-        <transaction-table />
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <todo-list />
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <box-card />
-      </el-col>
-    </el-row>
-    -->
   </div>
 </template>
 
@@ -160,41 +163,62 @@ export default {
         }
       }
       fetchEvent(obj).then(response => {
+        var context = this;
         this.dataList = response.responseBody.map((e)=>{
-          // e.ErrLeihuaStatusName = this.getStatusName(e.ErrLeihua);
+           e.ErrLeihuaStatusName = this.getStatusName(e.ErrLeihua);
+           e.colorss = '#65d186';
           //totalList计算total
           //故障标志位，T有故障，F无故障，D离线
           if(e.ErrFlag == 'F'){
-            this.pieChartData[0].value ++;
+            context.pieChartData[0].value ++;
+            e.colorss = '#65d186';
           }
           if(e.ErrFlag == 'T'){
-            this.pieChartData[1].value ++;
+            context.pieChartData[1].value ++;
+            e.colorss = '#f29e3c';
           }
           if(e.ErrFlag == 'D'){
-            this.totalList[4].count ++;
+            context.totalList[4].count ++;
+            e.colorss = '#f67287';
           }else{
-            this.zxcount++;
+            context.zxcount++;
           }
-          this.azcount++;
+          context.azcount++;
 
           //01预警
           if(e.ErrThunder=='01' ||e.ErrLeihua=='01' ||e.ErrLC1=='01' ||e.ErrLC2=='01' ||
             e.ErrTemp=='01' || e.ErrLC3=='01'
           ){
-            this.pieChartData[3].value ++;
+            context.pieChartData[3].value ++;
           }
 
           //10预警
           if(e.ErrThunder=='10' ||e.ErrLeihua=='10' ||e.ErrLC1=='10' ||e.ErrLC2=='10' ||
             e.ErrTemp=='10' || e.ErrLC3=='10'
           ){
-            this.pieChartData[2].value ++;
+            context.pieChartData[2].value ++;
           }
           return e;
         });
         this.loading = false
       })
     },
+    getTTimeCount(){//获取雷击数
+
+    },
+    getStatusName(incode){
+      if(!incode){
+        return "未知";
+      }
+      let statusName = incode;
+      this.status.map((s)=>{
+        if(s.code == incode){
+          statusName = s.value;
+          return statusName;
+        }
+      });
+      return statusName;
+    }
   }
 }
 </script>
