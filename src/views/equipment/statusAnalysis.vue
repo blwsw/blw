@@ -1,8 +1,8 @@
 <template>
   <div class="dashboard-editor-container">
+    <div class="chart-wrapper">
     <div style="margin: 0px 0px 5px 20px;color: #279cd5;"> 设备状态分析 </div>
-
-    <el-row :gutter="32">
+    <el-row :gutter="8">
 
       <el-col :xs="8" :sm="8" :lg="6">
         <div class="chart-wrapper">
@@ -25,7 +25,7 @@
         </div>
       </el-col>
     </el-row>
-
+    </div>
     <el-row :gutter="1">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
@@ -84,25 +84,6 @@ import TodoList from './components/TodoList'
 import BoxCard from './components/BoxCard'
 import {fetchEvent} from "@/api/article";
 
-const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  }
-}
-
 export default {
   name: 'StatusAnalysis',
   components: {
@@ -119,7 +100,10 @@ export default {
 
   data() {
     return {
-      lineChartData: lineChartData.newVisitis,
+      lineChartData: {
+        expectedData:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        actualData:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      },
       pieChartData:[
         { value: 0, name: '正常' ,itemStyle:{color:"#65d186"}},
         { value: 0, name: '故障',itemStyle:{color:"#f29e3c"} },
@@ -150,9 +134,6 @@ export default {
     this.getList();
   },
   methods: {
-    handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
-    },
     getList() {
       this.loading = true
       var obj = {
@@ -198,13 +179,22 @@ export default {
           ){
             context.pieChartData[2].value ++;
           }
+          this.getTTimeCount(e);
           return e;
         });
         this.loading = false
       })
     },
-    getTTimeCount(){//获取雷击数
-
+    getTTimeCount(item){//获取雷击数
+      //本年月份的雷击次数
+      var fdate = new Date(item.In_Time);
+      var expectedData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      for(var i=0;i<12;i++){
+         if(i== fdate.getMonth()){
+           expectedData[i]+=item.TTime;
+         }
+      }
+      this.lineChartData.expectedData =expectedData;
     },
     getStatusName(incode){
       if(!incode){

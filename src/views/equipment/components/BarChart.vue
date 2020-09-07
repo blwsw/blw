@@ -59,7 +59,11 @@ export default {
        series : 系列列表。每个系列通过 type 决定自己的图表类型
        */
       this.chart.setOption({
-        //title:"222",
+        title:{
+          text: '2.14',
+          subtext: '',
+          left: 'left',
+        },
         tooltip: {
           trigger: 'axis',
           axisPointer: { // 坐标轴指示器，坐标轴触发有效
@@ -70,10 +74,10 @@ export default {
           data:['正常','故障','报警','预警']
         },
         grid: {
-          top: 10,
-          left: '2%',
-          right: '2%',
-          bottom: '3%',
+          top: 28,
+          left: '0',
+          right: '5px',
+          bottom: '5px',
           containLabel: true
         },
         xAxis: [{
@@ -90,7 +94,7 @@ export default {
           }
         }],
         series: [{
-          name: '报警数',
+          name: '数量',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
