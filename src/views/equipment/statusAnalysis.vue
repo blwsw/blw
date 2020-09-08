@@ -2,28 +2,13 @@
   <div class="dashboard-editor-container">
     <div class="chart-wrapper">
     <div style="margin: 0px 0px 5px 20px;color: #279cd5;"> 设备状态分析 </div>
-    <el-row :gutter="8">
+    <el-row :gutter="0">
+      <el-col :xs="10" :sm="10" :md="4" :lg="4" v-for="bar in statusChart">
+        <div class="chart-wrapper"  >
+          <bar-chart :chart-data="bar.barChartData" :date="bar.date"  />
+        </div>
+      </el-col>
 
-      <el-col :xs="8" :sm="8" :lg="6">
-        <div class="chart-wrapper">
-          <bar-chart />
-        </div>
-      </el-col>
-      <el-col :xs="8" :sm="8" :lg="6">
-        <div class="chart-wrapper">
-          <bar-chart />
-        </div>
-      </el-col>
-      <el-col :xs="8" :sm="8" :lg="6">
-        <div class="chart-wrapper">
-          <bar-chart />
-        </div>
-      </el-col>
-      <el-col :xs="8" :sm="8" :lg="6">
-        <div class="chart-wrapper">
-          <bar-chart />
-        </div>
-      </el-col>
     </el-row>
     </div>
     <el-row :gutter="1">
@@ -110,6 +95,57 @@ export default {
         { value: 0, name: '报警' ,itemStyle:{color:"#f67287"}},
         { value: 0, name: '预警' }
         ],
+      barChartData:[
+        { value: 0, name: '正常'},
+        { value: 0, name: '故障'},
+        { value: 0, name: '报警'},
+        { value: 0, name: '预警'}
+      ],
+      statusChart:[
+        {date:'',barChartData:[
+            { value: 0, name: '正常'},
+            { value: 0, name: '故障'},
+            { value: 0, name: '报警'},
+            { value: 0, name: '预警'}
+          ]},
+        {date:'',barChartData:[
+            { value: 0, name: '正常'},
+            { value: 0, name: '故障'},
+            { value: 0, name: '报警'},
+            { value: 0, name: '预警'}
+          ]},
+        {date:'',barChartData:[
+            { value: 0, name: '正常'},
+            { value: 0, name: '故障'},
+            { value: 0, name: '报警'},
+            { value: 0, name: '预警'}
+          ]},
+        {date:'',barChartData:[
+            { value: 0, name: '正常'},
+            { value: 0, name: '故障'},
+            { value: 0, name: '报警'},
+            { value: 0, name: '预警'}
+          ]},
+        {date:'',barChartData:[
+            { value: 0, name: '正常'},
+            { value: 0, name: '故障'},
+            { value: 0, name: '报警'},
+            { value: 0, name: '预警'}
+          ]},
+        {date:'',barChartData:[
+            { value: 0, name: '正常'},
+            { value: 0, name: '故障'},
+            { value: 0, name: '报警'},
+            { value: 0, name: '预警'}
+          ]},
+        // {date:'',barChartData:[
+        //     { value: 0, name: '正常'},
+        //     { value: 0, name: '故障'},
+        //     { value: 0, name: '报警'},
+        //     { value: 0, name: '预警'}
+        //   ]},
+      ],
+      dataweek:[],
       loading:false,
       dataList: [],
       zxcount:0,
@@ -128,6 +164,14 @@ export default {
         {code:"01",value:"预警"},
         {code:"10",value:"报警"},
       ]
+    }
+  },
+  created() {
+    var day = null;
+    for(let i=4;i>=0;i--){
+      day = this.getWeek(-i);
+      this.dataweek.push(day);
+      this.statusChart[i].date=day;
     }
   },
   mounted() {
@@ -183,6 +227,7 @@ export default {
           return e;
         });
         this.loading = false
+        this.getTimeStatusCounts();
       })
     },
     getTTimeCount(item){//获取雷击数
@@ -196,6 +241,40 @@ export default {
       }
       this.lineChartData.expectedData =expectedData;
     },
+    getTimeStatusCounts(){//近一周的状态数据
+      // console.log(this.statusChart);
+      var context = this;
+      for(var i=0;i<this.dataweek.length;i++){
+
+        var days = this.dataweek[i];
+
+        this.dataList.map((item)=>{
+          let daye = context.getDayByTime(item.In_Time);
+          if( days == daye){
+            //故障标志位，T有故障，F无故障，D离线
+            if(item.ErrFlag == 'F'){
+              context.statusChart[i].barChartData[0].value ++;
+            }
+            if(item.ErrFlag == 'T'){
+              context.statusChart[i].barChartData[1].value ++;
+            }
+            //01预警
+              if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
+                item.ErrTemp=='01' || item.ErrLC3=='01'
+              ){
+                context.statusChart[i].barChartData[3].value ++;
+              }
+
+              //10预警
+              if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
+                item.ErrTemp=='10' || item.ErrLC3=='10'
+              ){
+                context.statusChart[i].barChartData[2].value ++;
+              }
+          }
+        });
+      }
+    },
     getStatusName(incode){
       if(!incode){
         return "未知";
@@ -208,7 +287,35 @@ export default {
         }
       });
       return statusName;
+    },
+    getWeek (day) {
+      var today = new Date();
+      var targetday_milliseconds=today.getTime() + 1000*60*60*24*day;
+      today.setTime(targetday_milliseconds);
+      var tYear = today.getFullYear();
+      var tMonth = today.getMonth();
+      var tDate = today.getDate();
+      tMonth = this.doHandleMonth(tMonth + 1);
+      tDate =  this.doHandleMonth(tDate);
+      return tYear+"-"+tMonth+"-"+tDate;
+    },
+    doHandleMonth(month) {
+      var m = month;
+      if (month.toString().length == 1) {
+        m = "0" + month;
+      }
+      return m;
+    },
+    getDayByTime(inTime){
+      var today = new Date(inTime);
+      var tYear = today.getFullYear();
+      var tMonth = today.getMonth();
+      var tDate = today.getDate();
+      tMonth = this.doHandleMonth(tMonth + 1);
+      tDate =  this.doHandleMonth(tDate);
+      return tYear+"-"+tMonth+"-"+tDate;
     }
+
   }
 }
 </script>

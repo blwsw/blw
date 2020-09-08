@@ -16,7 +16,6 @@
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('messages')">
         <div class="card-panel-icon-wrapper icon-message">
-         <!--<svg-icon icon-class="message" class-name="card-panel-icon" />-->
           <i class="el-icon-s-tools card-panel-icon" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
@@ -58,14 +57,26 @@
 
 <script>
 import CountTo from 'vue-count-to'
+import store from "@/store";
 
 export default {
   components: {
     CountTo
   },
+  mounted() {
+    this.getReals();
+  },
   methods: {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
+    },
+    async getReals(){
+      let relas = store.getters.reals
+      if(!relas || relas.length ==0){
+        relas = await store.dispatch('app/getReals',{reload:true} )
+      }
+
+      console.log(relas);
     }
   }
 }

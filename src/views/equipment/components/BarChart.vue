@@ -23,11 +23,28 @@ export default {
     height: {
       type: String,
       default: '200px'
+    },
+    chartData: {
+      type: Array,
+      required: true
+    },
+    date:{
+      type:String,
+      default:''
     }
   },
   data() {
     return {
       chart: null
+    }
+  },
+  watch: {
+    chartData: {
+      deep: true,
+      handler(val) {
+        console.log(val);
+        this.setOptions(val)
+      }
     }
   },
   mounted() {
@@ -44,7 +61,10 @@ export default {
   },
   methods: {
     initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
+      this.chart = echarts.init(this.$el, 'macarons');
+      this.setOptions(this.chartData);
+    },
+    setOptions(chartData){
       /**
        * title : 标题
 
@@ -60,7 +80,7 @@ export default {
        */
       this.chart.setOption({
         title:{
-          text: '2.14',
+          text: this.date || '时间段',
           subtext: '',
           left: 'left',
         },
@@ -84,8 +104,8 @@ export default {
           type: 'category',
           data:['正常','故障','报警','预警'],
           axisTick: {
-            alignWithLabel: false
-          }
+            alignWithLabel: true
+          },
         }],
         yAxis: [{
           type: 'value',
@@ -97,14 +117,15 @@ export default {
           name: '数量',
           type: 'bar',
           stack: 'vistors',
-          barWidth: '60%',
-          //data: [79, 0, 0, 0],
-          data: [
-            { value: 320, name: '正常' },
-            { value: 240, name: '故障' },
-            { value: 149, name: '报警' },
-            { value: 100, name: '预警' },
-          ],
+          barWidth: '40%',
+
+          data:chartData,
+          //   [
+          //   { value: 320, name: '正常' },
+          //   { value: 240, name: '故障' },
+          //   { value: 149, name: '报警' },
+          //   { value: 100, name: '预警' },
+          // ],
           animationDuration,
           itemStyle: {
             //通常情况下：

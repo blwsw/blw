@@ -1,5 +1,8 @@
+import { fetchEvent } from '@/api/article'
 import Cookies from 'js-cookie'
 import { getLanguage } from '@/lang/index'
+import {asyncRoutes} from "@/router";
+import {filterAsyncRoutes} from "@/store/modules/permission";
 
 const state = {
   sidebar: {
@@ -8,7 +11,8 @@ const state = {
   },
   device: 'desktop',
   language: getLanguage(),
-  size: Cookies.get('size') || 'medium'
+  size: Cookies.get('size') || 'medium',
+  reals:[]
 }
 
 const mutations = {
@@ -36,6 +40,10 @@ const mutations = {
   SET_SIZE: (state, size) => {
     state.size = size
     Cookies.set('size', size)
+  },
+  SET_REALS: (state, reals) => {
+    state.reals = reals
+    Cookies.set('reals', reals)
   }
 }
 
@@ -54,6 +62,25 @@ const actions = {
   },
   setSize({ commit }, size) {
     commit('SET_SIZE', size)
+  },
+  getReals({ commit },reals){
+    return new Promise(resolve => {
+      var obj = {
+        url: 'get/reals',
+        data: {
+          currentPage:1,
+          pageSize:10000
+        }
+      }
+      fetchEvent(obj).then(response => {
+        var context = this;
+        state.reals = response.responseBody.map((e)=>{
+          return e;
+        });
+        commit('SET_REALS', state.reals)
+        resolve(state.reals)
+      })
+    })
   }
 }
 

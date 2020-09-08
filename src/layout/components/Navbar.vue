@@ -22,7 +22,7 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <span>{{currentTime}}</span>
+          <span style="padding: 10px;">{{currentTime}}</span>
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
@@ -86,15 +86,15 @@ export default {
       _this.currentTime = //修改数据date
         new Date().getFullYear() +
         "-" +
-        (new Date().getMonth() + 1) +
+        _this.doHandleMonth((new Date().getMonth() + 1)) +
         "-" +
-        new Date().getDate() +
+        _this.doHandleMonth((new Date().getDate())) +
         " " +
-        new Date().getHours() +
+        _this.doHandleMonth(new Date().getHours()) +
         ":" +
-        new Date().getMinutes() +
-        ": " +
-        new Date().getSeconds();
+        _this.doHandleMonth(new Date().getMinutes()) +
+        ":" +
+        _this.doHandleMonth(new Date().getSeconds());
     }, 1000);
   },
   beforeDestroy() {
@@ -109,7 +109,14 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    }
+    },
+    doHandleMonth(month) {
+      var m = month;
+      if (month.toString().length == 1) {
+        m = "0" + month;
+      }
+      return m;
+    },
   }
 }
 </script>
