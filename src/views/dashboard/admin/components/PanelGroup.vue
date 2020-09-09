@@ -9,7 +9,7 @@
           <div class="card-panel-text">
             正常
           </div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="zccount" :duration="1" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -22,7 +22,7 @@
           <div class="card-panel-text">
             故障
           </div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="gzcount" :duration="1" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -35,7 +35,7 @@
           <div class="card-panel-text">
             预警
           </div>
-          <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="yjcount" :duration="1" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -48,7 +48,7 @@
           <div class="card-panel-text">
             报警
           </div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="bjcount" :duration="1" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -58,6 +58,7 @@
 <script>
 import CountTo from 'vue-count-to'
 import store from "@/store";
+import {mapState} from "vuex";
 
 export default {
   components: {
@@ -66,18 +67,66 @@ export default {
   mounted() {
     this.getReals();
   },
+  data() {
+    return {
+      zccount:0,
+      gzcount:0,
+      yjcount:0,
+      bjcount:0,
+    }
+  },
+  computed: { //          监听词条
+    getSearchKey(){
+      return this.$store.state.app.reals
+    }
+  },
+  watch: {
+    getSearchKey: {
+      handler(newValue,oldValue){ //当词条改变时执行事件
+         // console.log('new',newValue)
+         // console.log('old',oldValue)
+        this.reals = newValue;
+         this.appendData(newValue);
+      }
+    }
+
+  },
   methods: {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
     },
     async getReals(){
-      let relas = store.getters.reals
-      if(!relas || relas.length ==0){
-        relas = await store.dispatch('app/getReals',{reload:true} )
+      this.relas = store.getters.reals
+      if(!this.relas || this.relas.length ==0){
+        this.relas = await store.dispatch('app/getReals',{reload:true} )
       }
-
-      console.log(relas);
+      console.log(this.relas);
+    },
+    appendData(){
+      var context = this;
+      this.relas.map((item)=>{
+          //故障标志位，T有故障，F无故障，D离线
+          if(item.ErrFlag == 'F'){
+            context.zccount ++;
+          }
+          if(item.ErrFlag == 'T'){
+            context.gzcount ++;
+          }
+          //01预警
+          if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
+            item.ErrTemp=='01' || item.ErrLC3=='01'
+          ){
+            context.yjcount++;
+          }
+          //10预警
+          if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
+            item.ErrTemp=='10' || item.ErrLC3=='10'
+          ){
+            context.bjcount ++;
+          }
+      });
     }
+
   }
 }
 </script>

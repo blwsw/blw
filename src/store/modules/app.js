@@ -81,7 +81,10 @@ const actions = {
         resolve(state.reals)
       })
     })
-  }
+  },
+  setReals({ commit }, reals) {
+    commit('SET_REALS', reals)
+  },
 }
 
 export default {
