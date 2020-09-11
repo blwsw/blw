@@ -37,7 +37,6 @@ export default {
     ...mapState({
       sidebar: state => state.app.sidebar,
       device: state => state.app.device,
-      relas: state => state.app.relas,
       showSettings: state => state.settings.showSettings,
       needTagsView: state => state.settings.tagsView,
       fixedHeader: state => state.settings.fixedHeader
@@ -96,7 +95,7 @@ export default {
         var newData = JSON.parse(event.data)
         newData.In_Time = this.parseTime1(newData.In_Time);
         //新数据追加进去
-        this.relas = store.getters.reals
+        this.relas = this.$store.state.app.reals;
         if(!this.relas || this.relas.length ==0){
           this.relas = store.dispatch('app/getReals',{reload:true} )
         }else{

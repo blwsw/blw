@@ -96,11 +96,12 @@ export default {
       this.$emit('handleSetLineChartData', type)
     },
     async getReals(){
-      this.relas = store.getters.reals
+      this.relas = this.$store.state.app.reals
       if(!this.relas || this.relas.length ==0){
         this.relas = await store.dispatch('app/getReals',{reload:true} )
       }
-      console.log(this.relas);
+      this.appendData(this.relas);
+      // console.log(;
     },
     appendData(){
       var context = this;

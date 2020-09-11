@@ -51,7 +51,7 @@ export default {
     }
   },
   created() {
-    this.getList()
+   // this.getList()
     // init the default selected tab
     const tab = this.$route.query.tab
     if (tab) {

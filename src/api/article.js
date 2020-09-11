@@ -62,6 +62,9 @@ export function fetchEvent(obj) {
     requestParam['params'] = obj.data;
   }else{
     requestParam['data'] = obj.data;
+    if(obj.params){
+      requestParam['params'] = obj.params;
+    }
   }
 
   return request(requestParam);

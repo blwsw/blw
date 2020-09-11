@@ -9,13 +9,24 @@
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
         新增
       </el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-upload" @click="handleDoSend">
+        下发
+      </el-button>
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-upload" @click="handleUpload">
         导入
       </el-button>
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         导出
       </el-button>
-
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" @click="handleDeviceInit">
+        服务初始化
+      </el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" @click="handleClearFault">
+        清除故障
+      </el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" @click="handleGetNewData">
+        获取实时参数
+      </el-button>
     </div>
 
     <el-table
@@ -26,8 +37,11 @@
       fit
       highlight-current-row
       style="width: 100%;"
+      ref="multipleTable"
       @sort-change="sortChange"
+      @selection-change="checkSelection"
     >
+      <el-table-column type="selection" label="选择" width="65" ></el-table-column>
       <el-table-column label="节点编号" prop="addr" sortable="custom" align="center" width="80" :class-name="getSortClass('addr')">
         <template slot-scope="{row}">
           <span>{{ row.addr }}</span>
@@ -35,13 +49,12 @@
       </el-table-column>
       <el-table-column label="名称" width="150px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.name}}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.name}}</span>
         </template>
       </el-table-column>
       <el-table-column label="说明备注" min-width="150px">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.descript }}</span>
-          <el-tag>{{ row.descript | typeFilter }}</el-tag>
+          <span>{{ row.descript }}</span>
         </template>
       </el-table-column>
       <el-table-column label="串口服务器IP" width="110px" align="center">
@@ -128,7 +141,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             修改
@@ -287,10 +300,6 @@ export default {
         this.list = response.responseBody
         this.total = response.page.page_total
         this.listLoading = false
-        // Just to simulate the time of the request
-        // setTimeout(() => {
-        //
-        // }, 1.5 * 1000)
       })
     },
     handleFilter() {
@@ -427,6 +436,114 @@ export default {
     getSortClass: function(key) {
       const sort = this.listQuery.sort
       return sort === `+${key}` ? 'ascending' : 'descending'
+    },
+    checkSelection(){
+      //this.multipleSelection = val;
+    },
+    handleDoSend(){
+      //console.info(this.multipleSelection);
+      //console.info(this.$refs.multipleTable.tableData);
+      let selectionNodes = this.$refs.multipleTable.selection;
+      if(selectionNodes != null){
+        this.listLoading = true
+         for(var i=0;i<selectionNodes.length;i++){
+           var query={
+             url:"send/nodes/33",
+             data:selectionNodes[i],
+             methods:"put",
+             params:{
+               seqNo:22
+             }
+           };
+           fetchEvent(query).then(response => {
+             this.$notify({
+               title: '成功',
+               message: '下发成功',
+               type: 'success',
+               duration: 2000
+             })
+             this.listLoading = false
+           })
+         }
+        this.listLoading = false
+      }
+    },
+    handleDeviceInit(){
+      var query={
+        url:"nodes/initHint",
+        data: {},
+        methods:"put",
+        params:{
+        }
+      };
+      fetchEvent(query).then(response => {
+        this.$notify({
+          title: '成功',
+          message: '初始化下发成功',
+          type: 'success',
+          duration: 2000
+        })
+        this.listLoading = false
+      })
+    },
+    handleClearFault(){
+      let selectionNodes = this.$refs.multipleTable.selection;
+      if(selectionNodes == null || selectionNodes.length ==0){
+        this.$notify({
+          title: '提示',
+          message: '请选择需要清除的设备',
+          type: 'warning',
+          duration: 2000
+        })
+        return false;
+      }
+      let addrs = "";
+      for(var i=0;i<selectionNodes.length;i++){
+        if(!addrs){
+          addrs = selectionNodes[i].addr;
+        }else{
+          addrs +=","+selectionNodes[i].addr;
+        }
+      }
+
+      var query={
+        url:"nodes/clearFault",
+        data: {},
+        methods:"put",
+        params:{addrs
+        }
+      };
+      fetchEvent(query).then(response => {
+        this.$notify({
+          title: '成功',
+          message: '初始化下发成功',
+          type: 'success',
+          duration: 2000
+        })
+        this.listLoading = false
+      })
+    },
+    handleGetNewData(){
+      let selectionNodes = this.$refs.multipleTable.selection;
+      if(selectionNodes == null || selectionNodes.length ==0){
+        this.$notify({
+          title: '提示',
+          message: '请选择需要获取参数的设备',
+          type: 'warning',
+          duration: 2000
+        })
+        return false;
+      }
+
+      let addrs = "";
+      for(var i=0;i<selectionNodes.length;i++){
+         if(!addrs){
+           addrs = selectionNodes[i].addr;
+         }else{
+           addrs +=","+selectionNodes[i].addr;
+         }
+      }
+
     }
   }
 }

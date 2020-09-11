@@ -9,8 +9,8 @@
         <el-input v-model="listQuery.seqNo" placeholder="日志号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       </el-form-item>
       <el-form-item label="日志类型">
-        <el-select v-model="listQuery.userType" placeholder="请选择日志类型!" clearable style="width:200px" class="filter-item">
-          <el-option v-for="item in userroles" :key="item.code" :label="item.value" :value="item.code" />
+        <el-select v-model="listQuery.eventType" placeholder="请选择日志类型!" clearable style="width:200px" class="filter-item">
+          <el-option v-for="item in eventTypes" :key="item.code" :label="item.value" :value="item.code" />
         </el-select>
       </el-form-item>
 
@@ -26,7 +26,7 @@
   </div>
 
 
-  <el-table :data="list" border fit highlight-current-row style="width: 100%">
+  <el-table :data="list" border fit highlight-current-row style="width: 100%;">
     <el-table-column
       v-loading="loading"
       align="center"
@@ -102,14 +102,30 @@ export default {
       listQuery: {
         currentPage: 1,
         pageSize: 5,
-        eventType:'IN',
+        eventType:'',
         sort: '-id'
       },
       loading: false,
-      userroles: [{
-        code:'IN',value:"接收日志"
+      eventTypes: [{
+        code:'65',value:"服务反馈/推送采集数据"
       }, {
-        code:'OUT',value:"发送日志"
+        code:'66',value:"服务召唤设备参数反馈"
+      }, {
+        code:'67',value:"服务下发设备参数反馈"
+      }, {
+        code:'68',value:"服务初始化反馈"
+      }, {
+        code:'69',value:"服务清除设备故障反馈"
+      }, {
+        code:'50',value:"前端召唤设备参数"
+      }, {
+        code:'51',value:"前端下发设备参数"
+      }, {
+        code:'49',value:"前端召唤采集数据"
+      }, {
+        code:'52',value:"前端通知服务初始化"
+      }, {
+        code:'53',value:"前端通知服务清除设备故障"
       }, {
         code:'',value:"其他日志"
       }],
