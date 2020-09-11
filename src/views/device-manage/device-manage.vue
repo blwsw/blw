@@ -341,9 +341,9 @@ export default {
     handleCreate() {
       this.resetTemp()
       this.dialogStatus = 'create'
-      this.dialogFormVisible = true
+      //this.dialogFormVisible = true
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+        this.$router.push({ name: 'device-detail', params: {status:'create'}})
       })
     },
     createData() {
@@ -368,9 +368,10 @@ export default {
       this.temp = Object.assign({}, row) // copy obj
       this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
-      this.dialogFormVisible = true
+      //this.dialogFormVisible = true
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+        //this.$refs['dataForm'].clearValidate()
+        this.$router.push({ name: 'logsDetail', params: { seqNo: row.seqNo,requestBody:row.requestBody,responseBody:row.responseBody }})
       })
     },
     updateData() {

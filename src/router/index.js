@@ -182,6 +182,12 @@ export const asyncRoutes = [
         component: () => import('@/views/device-manage/upload-device'),
         meta: { title: '导入设备', icon: 'dashboard',roles: ['admin', 'editor', 'blw']},
         hidden: true
+      },{
+        path: 'device-detail',
+        name: 'device-detail',
+        component: () => import('@/views/device-manage/device-detail'),
+        meta: { title: '设备详情', icon: 'dashboard',roles: ['admin', 'editor', 'blw']},
+        hidden: true
       }
     ]
   },

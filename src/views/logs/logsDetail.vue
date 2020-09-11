@@ -66,7 +66,7 @@ export default {
     }
   },
   created() {
-      const seqNo = this.$route.params && this.$route.params.seqNo;
+    const seqNo = this.$route.params && this.$route.params.seqNo;
     const responseBody= this.$route.params && this.$route.params.responseBody;
     const requestBody= this.$route.params && this.$route.params.requestBody;
     this.logs={
