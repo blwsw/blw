@@ -96,48 +96,48 @@
       </el-table-column>
       <el-table-column label="脱扣" width="110px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.BOut }}</span>
+          <span>{{ row.BOut | qyjyFilter}}</span>
         </template>
       </el-table-column>
       <el-table-column label="开关量1" width="110px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.Switch1 }}</span>
+          <span>{{ row.Switch1 | qyjyFilter}}</span>
         </template>
       </el-table-column>
       <el-table-column label="开关量2" width="110px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.Switch2 }}</span>
+          <span>{{ row.Switch2 | qyjyFilter}}</span>
         </template>
       </el-table-column>
       <el-table-column label="开关量3" width="110px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.Switch3 }}</span>
+          <span>{{ row.Switch3 | qyjyFilter}}</span>
         </template>
       </el-table-column>
       <el-table-column label="开关量4" width="110px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.Switch4 }}</span>
+          <span>{{ row.Switch4 | qyjyFilter}}</span>
         </template>
       </el-table-column>
       <el-table-column label="漏电流1" width="110px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.TCurrent1 }}</span>
+          <span>{{ row.TCurrent1 | qyjyFilter}}</span>
         </template>
       </el-table-column>
       <el-table-column label="漏电流2" width="110px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.TCurrent2 }}</span>
+          <span>{{ row.TCurrent2 | qyjyFilter}}</span>
         </template>
       </el-table-column>
       <el-table-column label="漏电流3" width="110px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.TCurrent3 }}</span>
+          <span>{{ row.TCurrent3 | qyjyFilter}}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" class-name="status-col" width="100">
         <template slot-scope="{row}">
           <el-tag :type="row.delete | statusFilter">
-            {{ row.delete }}
+            {{ row.delete | typeFilter }}
           </el-tag>
         </template>
       </el-table-column>
@@ -146,20 +146,21 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             修改
           </el-button>
-          <el-button v-if="row.status!='1'" size="mini" type="success" @click="handleModifyStatus(row,'published')">
+          <el-button v-if="row.delete!='1'" size="mini" type="success" @click="handleModifyStatus(row,'1')">
             启用
           </el-button>
-          <el-button v-if="row.status!='0'" size="mini" @click="handleModifyStatus(row,'draft')">
+          <el-button v-if="row.delete!='0'" size="mini" @click="handleModifyStatus(row,'0')">
             禁用
           </el-button>
+          <!--
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
             删除
-          </el-button>
+          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.currentPage" :limit.sync="listQuery.pageSize" @pagination="getList" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
@@ -215,18 +216,23 @@ import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
 
 const calendarTypeOptions = [
-  { key: 'CN', display_name: 'China' },
-  { key: 'US', display_name: 'USA' },
-  { key: 'JP', display_name: 'Japan' },
-  { key: 'EU', display_name: 'Eurozone' }
+  { key: '1', display_name: '启用' },
+  { key: '0', display_name: '禁用' }
 ]
-
+//E:开启 D:关闭
+const qyjyOptions = [
+  { key: 'E', display_name: '开启' },
+  { key: 'D', display_name: '关闭' }
+]
 // arr to obj, such as { CN : "China", US : "USA" }
 const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
   acc[cur.key] = cur.display_name
   return acc
 }, {})
-
+const qyjyKeyValue = qyjyOptions.reduce((acc, cur) => {
+  acc[cur.key] = cur.display_name
+  return acc
+}, {})
 export default {
   name: 'deviceManager',
   components: { Pagination },
@@ -242,6 +248,9 @@ export default {
     },
     typeFilter(type) {
       return calendarTypeKeyValue[type]
+    },
+    qyjyFilter(code){
+      return qyjyKeyValue[code]
     }
   },
   data() {
@@ -252,7 +261,7 @@ export default {
       listLoading: true,
       listQuery: {
         currentPage: 1,
-        pageSize: 20,
+        pageSize: 15,
         querySring: undefined,
         sort: '+addr'
       },
@@ -283,7 +292,8 @@ export default {
         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
         title: [{ required: true, message: 'title is required', trigger: 'blur' }]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      downloadList:[]
     }
   },
   created() {
@@ -292,6 +302,9 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
+      if(this.listQuery.page){
+        this.listQuery.currentPage = this.listQuery.page;
+      }
       var query={
         url:"nodes",
         data:this.listQuery
@@ -303,15 +316,26 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.currentPage = 1
       this.getList()
     },
     handleModifyStatus(row, status) {
-      this.$message({
-        message: '操作Success',
-        type: 'success'
+      var query={
+        url:"nodes/"+row.addr,
+        data: {addr:row.addr,delete:status},
+        methods:'put'
+      };
+      fetchEvent(query).then(response => {
+        this.$message({
+          title: '成功',
+          message: '操作成功',
+          type: 'success',
+          duration: 2000
+        })
+        row.delete = status
       })
-      row.status = status
+
+
     },
     sortChange(data) {
       const { prop, order } = data
@@ -371,7 +395,8 @@ export default {
       //this.dialogFormVisible = true
       this.$nextTick(() => {
         //this.$refs['dataForm'].clearValidate()
-        this.$router.push({ name: 'logsDetail', params: { seqNo: row.seqNo,requestBody:row.requestBody,responseBody:row.responseBody }})
+        this.temp.isEdit=true;
+        this.$router.push({ name: 'device-detail', params:this.temp})
       })
     },
     updateData() {
@@ -413,26 +438,39 @@ export default {
     },
     handleDownload() {
       this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-        const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-        const data = this.formatJson(filterVal)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'table-list'
+      var query={
+        url:"nodes",
+        data: {
+          pageSize:10000,
+          currentPage:1,
+          querySring:this.listQuery.querySring
+        }
+      };
+      fetchEvent(query).then(response => {
+        this.downloadList = response.responseBody;
+        import('@/vendor/Export2Excel').then(excel => {
+          const tHeader = ["节点地址","安装位置","名称","串口服务器IP","端口","雷击电流报警设定值","温度报警设定值","温升限值设定值","漏电流限值","脱扣","开关量1","开关量2","开关量3","开关量4","漏电流1","漏电流2","漏电流3","备注"]
+          const filterVal = ["addr","InstallPos","name","serialserver_ip","serialserver_port","TCurrentAlarm","TAlarm","TRiseMax","LCurrentMax","BOut","Switch1","Switch2","Switch3","Switch4","TCurrent1","TCurrent2","TCurrent3","descript"]
+          const data = this.formatJson(filterVal)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: '设备列表'
+          })
+          this.downloadLoading = false
         })
-        this.downloadLoading = false
       })
+
     },
     formatJson(filterVal) {
-      return this.list.map(v => filterVal.map(j => {
+      return this.downloadList.map(v => filterVal.map(j => {
         if (j === 'timestamp') {
           return parseTime(v[j])
         } else {
           return v[j]
         }
       }))
+
     },
     getSortClass: function(key) {
       const sort = this.listQuery.sort

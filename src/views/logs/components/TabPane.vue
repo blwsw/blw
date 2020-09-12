@@ -43,30 +43,35 @@
         <span class="link-type" @click="handleUpdate(row)">{{ row.seqNo }}</span>
       </template>
     </el-table-column>
-    <el-table-column width="180px" align="center" label="Date">
+    <el-table-column width="180px" align="center" label="操作时间">
       <template slot-scope="scope">
         <span>{{ scope.row.requestTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column min-width="200px" label="requestBody" show-overflow-tooltip>
+    <el-table-column min-width="200px" label="请求内容" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.requestBody }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column width="110px" align="center" label="eventType">
+    <el-table-column width="110px" align="center" label="日志类型">
       <template slot-scope="scope">
-        <span>{{ scope.row.eventType }}</span>
+        <span>{{ scope.row.eventTypeName }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column width="120px" label="requestBody" show-overflow-tooltip>
+    <el-table-column width="120px" label="响应内容" show-overflow-tooltip>
       <template slot-scope="scope">
-        <span>{{ scope.row.requestBody }}</span>
+        <span>{{ scope.row.responseBody }}</span>
       </template>
     </el-table-column>
 
+    <el-table-column width="120px" label="操作人" show-overflow-tooltip>
+      <template slot-scope="scope">
+        <span>{{ scope.row.createUserName }}</span>
+      </template>
+    </el-table-column>
 
   </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.currentPage" :limit.sync="listQuery.pageSize" @pagination="getList" />
@@ -139,7 +144,15 @@ export default {
       this.loading = true
       this.$emit('create') // for test
       fetchEventLog(this.listQuery).then(response => {
-        this.list = response.responseBody
+        this.list = response.responseBody.map((e)=>{
+          this.eventTypes.map((t)=>{
+            if(t.code == e.eventType){
+              e.eventTypeName = t.value;
+              return false;
+            }
+          });
+          return e;
+        });
         this.total = response.page.page_total
         this.loading = false
       })

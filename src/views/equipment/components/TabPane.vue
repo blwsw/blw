@@ -1,11 +1,11 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" style="padding: 0;margin: 0">
     <div>
       <div style="float: right;">
-  <el-button :loading="downloadLoading" style="margin:0 0 20px 20px;" type="primary" icon="el-icon-document" @click="handleDownload1" >
+  <el-button :loading="downloadLoading" style="margin:5px;" type="primary" icon="el-icon-document" @click="handleDownload1" >
     导出
   </el-button>
-  <el-button :loading="downloadLoading" style="margin:0 0 20px 20px;" type="primary" icon="el-icon-document" @click="handlePrint" >
+  <el-button :loading="downloadLoading" style="margin:5px;" type="primary" icon="el-icon-document" @click="handlePrint" >
     打印
   </el-button></div>
   <el-table id="tableList" :data="list" border fit highlight-current-row style="width: 100%;height:600px;overflow-y: auto;" ref="tablelist">
@@ -51,14 +51,14 @@
 
       <el-table-column v-if="'L5' == type" min-width="50px" label="劣化状态" show-overflow-tooltip >
         <template slot-scope="{row}">
-          <span>{{ row.ErrLeihua }}</span>
+          <span>{{ row.ErrLeihua |statusFilter}}</span>
         </template>
       </el-table-column>
 
 
     <el-table-column width="110px" align="center" label="安装位置">
       <template slot-scope="scope">
-        <span>{{ scope.row.address }}</span>
+        <span>{{ scope.row.InstallPos }}</span>
       </template>
     </el-table-column>
 
@@ -75,11 +75,11 @@ import store from "@/store";
 
 export default {
   filters: {
-    statusFilter(status) {
+    statusFilter(status) {//故障代码，00正常01预警10报警
       const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
+        '00': '正常',
+        '01': '预警',
+        '10': '报警'
       }
       return statusMap[status]
     }
@@ -98,7 +98,7 @@ export default {
   },
   data() {
     return {
-      list: null,
+      list: [],
       downloadLoading: false,
       filename: '',
       autoWidth: true,
@@ -119,6 +119,7 @@ export default {
     this.list = this.$store.state.app.reals;
     if(!this.list || this.list.length ==0){
       this.list =  store.dispatch('app/getReals',{reload:true} )
+      this.list=[];
     }
   },
   computed: { //          监听词条
@@ -132,7 +133,6 @@ export default {
         this.list = newValue;
       }
     }
-
   },
   methods: {
     getList() {

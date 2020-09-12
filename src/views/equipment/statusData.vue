@@ -9,6 +9,7 @@
           <TabPaneL2 v-if="'L2'==item.key" :type="item.key" @getDataList="getList" @create="showCreatedTimes" :dataList="dataList" />
           <TabPaneL3 v-if="'L3'==item.key" :type="item.key" @getDataList="getList" @create="showCreatedTimes" :dataList="dataList" />
           <TabPanelldl v-if="'L4'==item.key" :type="item.key" @getDataList="getList" @create="showCreatedTimes" :dataList="dataList" />
+
           <TabPane v-if="'L5'==item.key" :type="item.key" @getDataList="getList" @create="showCreatedTimes" :dataList="dataList" />
         </keep-alive>
       </el-tab-pane>
@@ -24,7 +25,7 @@ import TabPanelldl from './components/TabPanelldl'
 import {fetchEvent} from "@/api/article";
 
 export default {
-  name: 'Tab',
+  name: 'statusData',
   components: { TabPane, TabPaneL2, TabPaneL3, TabPanelldl },
   data() {
     return {
@@ -81,5 +82,8 @@ export default {
 <style scoped>
   .tab-container {
     margin: 5px;
+  }
+  .el-tabs__content{
+    padding: 0;
   }
 </style>

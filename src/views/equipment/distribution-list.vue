@@ -41,27 +41,25 @@
     <el-row :gutter="0" class="panel-group">
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <el-row :gutter="1" >
-          <el-col :xs="12" :sm="12" :lg="6">
-            <el-card class="box-card" >
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-card class="box-card btmtj btmtjbgcolor" >
               在线台数
             </el-card>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="6">
-            <el-card class="box-card"  >
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-card class="box-card btmtj"  >
               {{zxcount}}台
             </el-card>
           </el-col>
         </el-row>
         <el-row :gutter="0" >
-          <el-col :xs="12" :sm="12" :lg="6">
-            <el-card class="box-card" >
-            <div class="card-panel-text">
+          <el-col :xs="12" :sm="12" :lg="12">
+            <el-card class="box-card btmtj btmtjbgcolor" >
               安装台数
-            </div>
             </el-card>
           </el-col>
-          <el-col :xs="12" :sm="12" :lg="6" >
-            <el-card class="box-card">
+          <el-col :xs="12" :sm="12" :lg="12" >
+            <el-card class="box-card btmtj">
               {{azcount}}台
             </el-card>
           </el-col>
@@ -220,6 +218,13 @@ export default {
 .panel-group {
   margin-top: 15px;
 
+  .btmtjbgcolor{
+    background: #3671ca;
+    color: azure;
+  }
+  .btmtj{
+    text-align: center;
+  }
   .card-panel-col {
     margin-bottom: 15px;
   }
