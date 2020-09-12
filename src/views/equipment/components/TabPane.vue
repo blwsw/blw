@@ -54,6 +54,11 @@
           <span>{{ row.ErrLeihua |statusFilter}}</span>
         </template>
       </el-table-column>
+    <el-table-column v-if="'L5' == type" min-width="50px" label="劣化度" show-overflow-tooltip >
+      <template slot-scope="{row}">
+        <span>{{ row.Deterior}}</span>
+      </template>
+    </el-table-column>
 
 
     <el-table-column width="110px" align="center" label="安装位置">
@@ -150,9 +155,21 @@ export default {
     handleDownload1() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['序号', '节点编号', '配电箱号', '时间', '雷击次数', '安装位置']
-        const filterVal = ['seqNo', 'addr', 'pdcNo', 'In_Time', 'TTime','address']
-        const list = this.list
+        let tHeader = ['序号', '节点编号', '配电箱号', '时间', '雷击次数', '安装位置']
+        let filterVal = ['seqNo', 'addr', 'pdcNo', 'In_Time', 'TTime','InstallPos']
+        if(this.type =='L5'){
+          tHeader = ['序号', '节点编号', '配电箱号', '时间', '劣化状态', '劣化度', '安装位置']
+          filterVal = ['seqNo', 'addr', 'pdcNo', 'In_Time', 'ErrLeihuaName', 'Deterior','InstallPos']
+        }
+        const statusMap = {
+          '00': '正常',
+          '01': '预警',
+          '10': '报警'
+        }
+        const list = this.list.map((l)=>{
+          l.ErrLeihuaName = statusMap[l.ErrLeihua];
+          return l;
+        })
         const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({
           header: tHeader,

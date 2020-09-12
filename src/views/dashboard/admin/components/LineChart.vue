@@ -29,6 +29,10 @@ export default {
     chartData: {
       type: Object,
       required: true
+    },
+    weeks:{
+      type:Array,
+      defaults:["星期一","星期二"]
     }
   },
   data() {
@@ -63,8 +67,13 @@ export default {
     },
     setOptions({ expectedData, actualData } = {}) {
       this.chart.setOption({
+        title: {
+          text: '近7天状态折线图',
+          subtext: '',
+          left: 'left'
+        },
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: this.weeks,//['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
           boundaryGap: false,
           axisTick: {
             show: false
@@ -90,10 +99,10 @@ export default {
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          data: ['警报数', '雷击数']
         },
         series: [{
-          name: 'expected', itemStyle: {
+          name: '警报数', itemStyle: {
             normal: {
               color: '#FF005A',
               lineStyle: {
@@ -109,7 +118,7 @@ export default {
           animationEasing: 'cubicInOut'
         },
         {
-          name: 'actual',
+          name: '雷击数',
           smooth: true,
           type: 'line',
           itemStyle: {

@@ -30,18 +30,18 @@
         <span>{{ row.pdcNo }}</span>
       </template>
     </el-table-column>
-    <el-table-column width="150px" align="center" label="泄露电流1">
+    <el-table-column width="90px" align="center" label="泄露电流1">
       <template slot-scope="scope">
         <span>{{ scope.row.LCurrent1 }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column min-width="50px" label="泄露电流2" show-overflow-tooltip>
+    <el-table-column min-width="90px" label="泄露电流2" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.LCurrent2 }}</span>
       </template>
     </el-table-column>
-    <el-table-column min-width="50px" label="泄露电流3" show-overflow-tooltip>
+    <el-table-column min-width="90px" label="泄露电流3" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.LCurrent3 }}</span>
       </template>
@@ -140,8 +140,8 @@ export default {
     handleDownload1() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['序号', '节点编号', '配电箱号', '时间', '雷击次数', '安装位置']
-        const filterVal = ['seqNo', 'addr', 'pdcNo', 'In_Time', 'TTime','address']
+        const tHeader = ['序号', '节点编号', '配电箱号', '时间', '泄露电流1', '泄露电流2', '泄露电流3', '安装位置']
+        const filterVal = ['seqNo', 'addr', 'pdcNo', 'In_Time','LCurrent1','LCurrent2','LCurrent3','InstallPos']
         const list = this.list
         const data = this.formatJson(filterVal, list)
         excel.export_json_to_excel({

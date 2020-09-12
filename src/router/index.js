@@ -188,7 +188,17 @@ export const asyncRoutes = [
         component: () => import('@/views/device-manage/device-detail'),
         meta: { title: '设备详情', icon: 'dashboard',roles: ['admin', 'editor', 'blw']},
         hidden: true
+      },
+      {
+        path: 'historys',
+        component: () => import('@/views/historys/index'),
+        name: 'historys',
+        meta: {
+          title: '历史记录',
+          roles: ['admin', 'admin1','admin2','admin3','editor', 'blw']
+        }
       }
+
     ]
   },
   {

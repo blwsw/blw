@@ -89,7 +89,6 @@ export default {
          this.appendData(newValue);
       }
     }
-
   },
   methods: {
     handleSetLineChartData(type) {

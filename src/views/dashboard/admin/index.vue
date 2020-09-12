@@ -5,15 +5,15 @@
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData" />
+      <line-chart :chart-data="lineChartData" :weeks="weeks" />
     </el-row>
 
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
+      <!--<el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <raddar-chart />
         </div>
-      </el-col>
+      </el-col>-->
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <pie-chart />
@@ -22,6 +22,36 @@
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <bar-chart />
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper" style="width: 100%;">
+          <div style="margin: 0px 0px 5px 20px;color: #279cd5;"> 设备巡检状态 </div>
+          <el-table id="tableList" :data="reals" border fit highlight-current-row style="width: 100%;height: 326px;overflow-y: auto;" ref="tablelist">
+            <el-table-column
+              v-loading="loading"
+              align="center"
+              label="序号"
+              min-width="40px"
+              element-loading-text="请给我点时间！"
+
+            >
+              <template slot-scope="srow">
+                <span v-bind:style="{color:srow.row.colorss}" > {{srow.$index+1}} </span>
+              </template>
+            </el-table-column>
+            <el-table-column  min-width="50px" label="节点编号" show-overflow-tooltip >
+              <template slot-scope="{row}">
+                <span v-bind:style="{color:row.colorss}" >{{ row.addr }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column  min-width="50px" label="设备状态" show-overflow-tooltip >
+              <template slot-scope="{row}">
+                <span v-bind:style="{color:row.colorss}"  >{{ row.ErrLeihuaStatusName }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+
         </div>
       </el-col>
     </el-row>
@@ -40,11 +70,13 @@ import BarChart from './components/BarChart'
 import TransactionTable from './components/TransactionTable'
 import TodoList from './components/TodoList'
 import BoxCard from './components/BoxCard'
+import {parseTime} from "@/utils";
+import store from "@/store";
 
 const lineChartData = {
   newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
+    expectedData: [0, 0, 0, 0, 0, 0, 0],
+    actualData: [0, 0, 0, 0, 0, 0, 0]
   },
   messages: {
     expectedData: [200, 192, 120, 144, 160, 130, 140],
@@ -75,13 +107,129 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: lineChartData.newVisitis,
+      reals:[],
+      dataweek:[],
+      weeks:[],
+      //00正常01预警10报警
+      status: [
+        {code:"",value:"未知"},
+        {code:"00",value:"正常"},
+        {code:"01",value:"预警"},
+        {code:"10",value:"报警"},
+      ]
     }
   },
+  computed: { //          监听词条
+    getRealData(){
+      return this.$store.state.app.reals
+    }
+  },
+  watch: {
+    getRealData: {
+      handler(newValue,oldValue){ //当词条改变时执行事件
+        // console.log('new',newValue)
+        // console.log('old',oldValue)
+        this.reals = newValue;
+        this.appendData(newValue);
+      }
+    }
+  },
+  mounted() {
+    this.appendData(this.reals);
+  },
+  created() {
+    var day = null;
+    for(let i=6;i>=0;i--){
+      day = this.getWeek(-i);
+      this.dataweek.push(day);
+      this.weeks.push("星期"+parseTime(day, '{a}'));
+      //this.statusChart[i].date=day;
+    }
+    this.reals = this.$store.state.app.reals;
+    if(!this.relas || this.relas.length ==0){
+      this.relas = store.dispatch('app/getReals',{reload:true} )
+    }
+
+  },
   methods: {
+    getWeek (day) {
+      var today = new Date();
+      var targetday_milliseconds=today.getTime() + 1000*60*60*24*day;
+      today.setTime(targetday_milliseconds);
+      var tYear = today.getFullYear();
+      var tMonth = today.getMonth();
+      var tDate = today.getDate();
+      tMonth = this.doHandleMonth(tMonth + 1);
+      tDate =  this.doHandleMonth(tDate);
+      return tYear+"-"+tMonth+"-"+tDate;
+    },
+    doHandleMonth(month) {
+      var m = month;
+      if (month.toString().length == 1) {
+        m = "0" + month;
+      }
+      return m;
+    },
+    getDayByTime(inTime){
+      var today = new Date(inTime);
+      var tYear = today.getFullYear();
+      var tMonth = today.getMonth();
+      var tDate = today.getDate();
+      tMonth = this.doHandleMonth(tMonth + 1);
+      tDate =  this.doHandleMonth(tDate);
+      return tYear+"-"+tMonth+"-"+tDate;
+    },
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
-    }
+    },
+    appendData(data){//近一周状况
+      var context = this;
+      for(var i=0;i<this.dataweek.length;i++){
+        var days = this.dataweek[i];
+        this.reals = this.reals.map((item)=>{
+          item.ErrLeihuaStatusName = this.getStatusName(item.ErrLeihua);
+          let daye = context.getDayByTime(item.In_Time);
+          if( days == daye){
+            //故障标志位，T有故障，F无故障，D离线
+            if(item.ErrFlag == 'T'){
+              context.lineChartData.expectedData[i] ++;
+            }
+            if(item.TTime){
+              context.lineChartData.actualData[i] +=item.TTime;
+            }
+            //01预警
+            if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
+              item.ErrTemp=='01' || item.ErrLC3=='01'
+            ){
+              context.lineChartData.expectedData[i] ++;
+            }
+
+            //10预警
+            if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
+              item.ErrTemp=='10' || item.ErrLC3=='10'
+            ){
+              context.lineChartData.expectedData[i] ++;
+            }
+          }
+          return item;
+        });
+      }
+      this.lineChartData = lineChartData['newVisitis'];
+    },
+    getStatusName(incode){
+      if(!incode){
+        return "未知";
+      }
+      let statusName = incode;
+      this.status.map((s)=>{
+        if(s.code == incode){
+          statusName = s.value;
+          return statusName;
+        }
+      });
+      return statusName;
+    },
   }
 }
 </script>
