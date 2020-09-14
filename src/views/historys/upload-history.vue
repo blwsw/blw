@@ -12,15 +12,17 @@
 <script>
 
 const calendarTypeOptions = [
+
+
   { key: '节点编号', display_name: 'addr' },
   { key: '节点地址', display_name: 'addr' },
-  { key: '状态', display_name: 'delete' },
-  { key: '名称', display_name: 'name' },
-  { key: '备注', display_name: 'descript' },
-  { key: '说明', display_name: 'descript' },
-  { key: '安装位置', display_name: 'InstallPos' },
-  { key: '串口服务器IP', display_name: 'serialserver_ip' },
-  { key: '串口服务器端口', display_name: 'serialserver_port' },
+  { key: '故障标志位', display_name: 'ErrFlag' },
+  { key: '雷击故障代码', display_name: 'ErrThunder' },
+  { key: '温度故障代码', display_name: 'ErrTemp' },
+  { key: '温度劣化故障代码', display_name: 'ErrTempLeihua' },
+  { key: '漏电劣化1故障代码', display_name: 'ErrLCLeihua1' },
+  { key: '漏电劣化2故障代码', display_name: 'ErrLCLeihua2' },
+  { key: '漏电劣化3故障代码', display_name: 'ErrLCLeihua3' },
   { key: '端口', display_name: 'serialserver_port' },
   { key: '雷击电流报警设定值', display_name: 'TCurrentAlarm' },
   { key: '温度报警设定值', display_name: 'TAlarm' },
@@ -35,7 +37,6 @@ const calendarTypeOptions = [
   { key: '漏电流2', display_name: 'TCurrent2' },
   { key: '漏电流3', display_name: 'TCurrent3' },
   { key: '配电柜', display_name: 'PDC' },
-
 ]
 
 // arr to obj, such as { CN : "China", US : "USA" }
@@ -47,7 +48,7 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 import UploadExcelComponent from '@/components/UploadExcel/index.vue'
 import { fetchEvent} from '@/api/article'
 export default {
-  name: 'UploadExcel',
+  name: 'uploadHistory',
   components: { UploadExcelComponent },
   data() {
     return {
@@ -95,9 +96,10 @@ export default {
 
       var countIndex =0;
      dataList.map((node)=>{
+        node['delete']= "1";
         //保存数据
         var query={
-          url:"history",
+          url:"nodes",
           data:node,
           methods:"post"
         };
