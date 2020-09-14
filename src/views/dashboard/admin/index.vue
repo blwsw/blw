@@ -16,7 +16,7 @@
       </el-col>-->
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <pie-chart />
+          <pie-chart :chart-data="pieChartData" :azcount="azcount"  />
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
@@ -73,24 +73,6 @@ import BoxCard from './components/BoxCard'
 import {parseTime} from "@/utils";
 import store from "@/store";
 
-const lineChartData = {
-  newVisitis: {
-    expectedData: [0, 0, 0, 0, 0, 0, 0],
-    actualData: [0, 0, 0, 0, 0, 0, 0]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  }
-}
 
 export default {
   name: 'DashboardAdmin',
@@ -107,7 +89,17 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis,
+      lineChartData: {
+        expectedData:[0, 0, 0, 0, 0, 0, 0],
+        actualData:[0, 0, 0, 0, 0, 0, 0]
+      },
+      pieChartData:[
+        { value: 0, name: '正常' ,itemStyle:{color:"#65d186"}},
+        { value: 0, name: '故障',itemStyle:{color:"#f29e3c"} },
+        { value: 0, name: '报警' ,itemStyle:{color:"#f67287"}},
+        { value: 0, name: '预警' }
+      ],
+      azcount:0,
       reals:[],
       dataweek:[],
       weeks:[],
@@ -137,7 +129,7 @@ export default {
     }
   },
   mounted() {
-    this.appendData(this.reals);
+    //this.appendData(this.reals);
   },
   created() {
     var day = null;
@@ -149,9 +141,9 @@ export default {
     }
     this.reals = this.$store.state.app.reals;
     if(!this.relas || this.relas.length ==0){
-      this.relas = store.dispatch('app/getReals',{reload:true} )
+      //this.relas = store.dispatch('app/getReals',{reload:true} )
     }
-    this.appendData(this.reals);
+
   },
   methods: {
     getWeek (day) {
@@ -186,11 +178,46 @@ export default {
     },
     appendData(data){//近一周状况
       var context = this;
+      context.azcount= this.reals.length;
       for(var i=0;i<this.dataweek.length;i++){
         var days = this.dataweek[i];
         this.reals = this.reals.map((item)=>{
           item.ErrLeihuaStatusName = this.getStatusName(item.ErrLeihua);
           let daye = context.getDayByTime(item.In_Time);
+
+          item.colorss = '#65d186';
+          //totalList计算total
+          //故障标志位，T有故障，F无故障，D离线
+          if(item.ErrFlag == 'F'){
+            context.pieChartData[0].value ++;
+            item.colorss = '#65d186';
+          }
+          if(item.ErrFlag == 'T'){
+            context.pieChartData[1].value ++;
+            item.colorss = '#f29e3c';
+          }
+          if(item.ErrFlag == 'D'){
+            // context.totalList[4].count ++;
+            item.colorss = '#f67287';
+          }else{
+            // context.zxcount++;
+          }
+          // context.azcount++;
+
+          //01预警
+          if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
+            item.ErrTemp=='01' || item.ErrLC3=='01'
+          ){
+            context.pieChartData[3].value ++;
+          }
+
+          //10预警
+          if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
+            item.ErrTemp=='10' || item.ErrLC3=='10'
+          ){
+            context.pieChartData[2].value ++;
+          }
+
           if( days == daye){
             //故障标志位，T有故障，F无故障，D离线
             if(item.ErrFlag == 'T'){
@@ -216,7 +243,6 @@ export default {
           return item;
         });
       }
-      this.lineChartData = lineChartData['newVisitis'];
     },
     getStatusName(incode){
       if(!incode){

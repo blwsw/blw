@@ -213,7 +213,8 @@
 import { fetchEvent, fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
-import Pagination from '@/components/Pagination/index' // secondary package based on el-pagination
+import Pagination from '@/components/Pagination/index'
+import {deleteRole} from "@/api/role"; // secondary package based on el-pagination
 
 const calendarTypeOptions = [
   { key: '1', display_name: '启用' },
@@ -508,22 +509,30 @@ export default {
       }
     },
     handleDeviceInit(){
-      var query={
-        url:"nodes/initHint",
-        data: {},
-        methods:"put",
-        params:{
-        }
-      };
-      fetchEvent(query).then(response => {
-        this.$notify({
-          title: '成功',
-          message: '初始化下发成功',
-          type: 'success',
-          duration: 2000
-        })
-        this.listLoading = false
+      this.$confirm('系统设备初始化,将读取配置信息表重新设置。', '确认初始化系统设备吗?', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
+        .then(async() => {
+          var query={
+            url:"nodes/initHint",
+            data: {},
+            methods:"put",
+            params:{
+            }
+          };
+          fetchEvent(query).then(response => {
+            this.$notify({
+              title: '成功',
+              message: '初始化下发成功',
+              type: 'success',
+              duration: 2000
+            })
+            this.listLoading = false
+          })
+        })
+        .catch(err => { console.error(err) })
     },
     handleClearFault(){
       let selectionNodes = this.$refs.multipleTable.selection;

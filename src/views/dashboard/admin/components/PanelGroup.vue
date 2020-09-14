@@ -100,7 +100,6 @@ export default {
         this.relas = await store.dispatch('app/getReals',{reload:true} )
       }
       this.appendData(this.relas);
-      // console.log(;
     },
     appendData(){
       var context = this;

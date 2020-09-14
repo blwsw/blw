@@ -21,11 +21,27 @@ export default {
     height: {
       type: String,
       default: '300px'
+    },
+    chartData: {
+      type: Array,
+      required: true
+    },
+    azcount:{
+      type:Number,
+      default:0
     }
   },
   data() {
     return {
       chart: null
+    }
+  },
+  watch: {
+    chartData: {
+      deep: true,
+      handler(val) {
+        this.setOptions(val)
+      }
     }
   },
   mounted() {
@@ -43,8 +59,18 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-
+      this.setOptions(this.chartData, null);
+    },
+    setOptions(picChartData,legendData){
+      if(!legendData){
+        legendData = ['正常', '故障', '报警', '预警'];
+      }
       this.chart.setOption({
+        title: {
+          text: '系统状态图',
+          subtext: '总台数'+this.azcount+"台",
+          left: 'left'
+        },
         tooltip: {
           trigger: 'item',
           formatter: '{a} <br/>{b} : {c} ({d}%)'
@@ -52,22 +78,16 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
+          data: legendData
         },
         series: [
           {
-            name: 'WEEKLY WRITE ARTICLES',
+            name: '系统状态',
             type: 'pie',
             roseType: 'radius',
             radius: [15, 95],
             center: ['50%', '38%'],
-            data: [
-              { value: 320, name: 'Industries' },
-              { value: 240, name: 'Technology' },
-              { value: 149, name: 'Forex' },
-              { value: 100, name: 'Gold' },
-              { value: 59, name: 'Forecasts' }
-            ],
+            data: picChartData,
             animationEasing: 'cubicInOut',
             animationDuration: 2600
           }

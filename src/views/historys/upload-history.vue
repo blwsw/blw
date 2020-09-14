@@ -12,8 +12,6 @@
 <script>
 
 const calendarTypeOptions = [
-
-
   { key: '节点编号', display_name: 'addr' },
   { key: '节点地址', display_name: 'addr' },
   { key: '故障标志位', display_name: 'ErrFlag' },
@@ -96,17 +94,16 @@ export default {
 
       var countIndex =0;
      dataList.map((node)=>{
-        node['delete']= "1";
         //保存数据
         var query={
-          url:"nodes",
+          url:"history",
           data:node,
           methods:"post"
         };
          fetchEvent(query).then(response => {
           countIndex++;
           if(countIndex == dataList.length){
-            this.$router.push({ name: 'deviceManage', params: { id:"" }}) //
+            this.$router.push({ name: 'history', params: { id:"" }}) //
           }
         })
       });

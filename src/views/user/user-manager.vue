@@ -25,11 +25,11 @@
       </el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
         新增
-      </el-button>
+      </el-button><!--
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         导出
       </el-button>
-        <!--
+
       <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
         reviewer
       </el-checkbox>-->
@@ -311,17 +311,18 @@ export default {
       })
     },
     updateData() {
+      var context = this;
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
           updateArticle(tempData).then(() => {
-            const index = this.list.findIndex(v => v.id === this.temp.id)
-            this.list.splice(user, 1, this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: 'Success',
-              message: 'Update Successfully',
+            const index = context.list.findIndex(v => v.id === tempData.id)
+            context.list.splice(index, 1, tempData)
+            context.dialogFormVisible = false
+            context.$notify({
+              title: '成功',
+              message: '修改成功',
               type: 'success',
               duration: 2000
             })

@@ -28,31 +28,60 @@
       element-loading-text="请给我点时间！"
     >
       <template slot-scope="scope">
-        <span >{{ scope.row.id }}</span>
+        <span >{{ scope.$index+1 }}</span>
       </template>
     </el-table-column>
-    <el-table-column min-width="100px" label="节点编号">
+    <el-table-column min-width="60px" label="节点编号">
       <template slot-scope="{row}">
         <span class="link-type" @click="handleUpdate(row)">{{ row.addr }}</span>
       </template>
     </el-table-column>
-    <el-table-column width="180px" align="center" label="发生日期">
+    <el-table-column width="140px" align="center" label="发生日期">
       <template slot-scope="scope">
         <span>{{ scope.row.In_Time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
       </template>
     </el-table-column>
-    <el-table-column width="180px" align="center" label="配电箱号">
+    <el-table-column width="100px" align="center" label="配电箱号">
       <template slot-scope="scope">
         <span>{{ scope.row.pdcNo}}</span>
       </template>
     </el-table-column>
 
-    <el-table-column min-width="200px" label="事件" show-overflow-tooltip>
+    <el-table-column min-width="40px" label="故障标志位" show-overflow-tooltip>
       <template slot-scope="{row}">
-        <span>{{ row.requestBody }}</span>
+        <span>{{ row.ErrFlag |statusFilter}}</span>
       </template>
     </el-table-column>
-
+    <el-table-column min-width="40px" label="雷击故障代码" show-overflow-tooltip>
+      <template slot-scope="{row}">
+        <span>{{ row.ErrThunder |GZFilter}}</span>
+      </template>
+    </el-table-column>
+    <el-table-column min-width="40px" label="温度故障代码" show-overflow-tooltip>
+      <template slot-scope="{row}">
+        <span>{{ row.ErrTemp |GZFilter }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column min-width="40px" label="温度劣化故障代码" show-overflow-tooltip>
+      <template slot-scope="{row}">
+        <span>{{ row.ErrTempLeihua |GZFilter}}</span>
+      </template>
+    </el-table-column>
+    <el-table-column min-width="40px" label="漏电劣化1故障代码" show-overflow-tooltip>
+      <template slot-scope="{row}">
+        <span>{{ row.ErrLCLeihua1 |GZFilter}}</span>
+      </template>
+    </el-table-column>
+    <el-table-column min-width="40px" label="漏电劣化2故障代码" show-overflow-tooltip>
+      <template slot-scope="{row}">
+        <span>{{ row.ErrLCLeihua2 |GZFilter}}</span>
+      </template>
+    </el-table-column>
+    <el-table-column min-width="40px" label="漏电劣化3故障代码" show-overflow-tooltip>
+      <template slot-scope="{row}">
+        <span>{{ row.ErrLCLeihua3 |GZFilter}}</span>
+      </template>
+    </el-table-column>
     <el-table-column min-width="200px" align="center" label="安装位置">
       <template slot-scope="scope">
         <span>{{ scope.row.InstallPos }}</span>
@@ -76,10 +105,18 @@ export default {
   directives: { waves },
   filters: {
     statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
+      const statusMap = {//故障标志位，T有故障，F无故障，D离线
+        'T': '有故障',
+        'F': '无故障',
+        'D': '离线'
+      }
+      return statusMap[status]
+    },
+    GZFilter(status) {
+      const statusMap = {//00正常01预警10报警
+        '00': '正常',
+        '01': '预警',
+        '10': '报警'
       }
       return statusMap[status]
     }
@@ -96,7 +133,7 @@ export default {
       total:0,
       listQuery: {
         currentPage: 1,
-        pageSize: 5,
+        pageSize: 10  ,
         eventType:'',
         sort: '-addr'
       },
