@@ -48,6 +48,13 @@ export function fetchEventLog(obj) {
     params: obj
   })
 }
+export function fetchHistory(obj) {
+  return request({
+    url: '/get/history',
+    method: 'get',
+    params: obj
+  })
+}
 export function fetchEvent(obj) {
 
   if(!obj.methods){

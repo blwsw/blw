@@ -6,9 +6,9 @@
       <el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" @click="handleUpload">
         浏览
       </el-button>
-      <el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" icon="el-icon-document" @click="doUpload" >
+     <!-- <el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" icon="el-icon-document" @click="doUpload" >
         上传
-      </el-button>
+      </el-button>-->
       <el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" icon="el-icon-upload" @click="doSave" >
         保存
       </el-button>

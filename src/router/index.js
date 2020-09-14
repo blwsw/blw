@@ -197,8 +197,17 @@ export const asyncRoutes = [
           title: '历史记录',
           roles: ['admin', 'admin1','admin2','admin3','editor', 'blw']
         }
+      },
+      {
+        path: 'upload-history',
+        component: () => import('@/views/historys/upload-history'),
+        name: 'upload-history',
+        meta: {
+          title: '历史记录',
+          roles: ['admin', 'admin1', 'admin2', 'admin3', 'editor', 'blw']
+        },
+        hidden: true
       }
-
     ]
   },
   {

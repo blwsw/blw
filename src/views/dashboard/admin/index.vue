@@ -111,6 +111,7 @@ export default {
       reals:[],
       dataweek:[],
       weeks:[],
+      loading:false,
       //00正常01预警10报警
       status: [
         {code:"",value:"未知"},
@@ -150,7 +151,7 @@ export default {
     if(!this.relas || this.relas.length ==0){
       this.relas = store.dispatch('app/getReals',{reload:true} )
     }
-
+    this.appendData(this.reals);
   },
   methods: {
     getWeek (day) {

@@ -1,27 +1,20 @@
 <template>
-  <div class="app-container">
-  <div class="filter-container">
+  <div class="app-container" style="padding-bottom: 0px;padding-top: 0px;">
+  <div class="filter-container" style="padding-bottom: 0px;padding-top: 0px;">
     <el-form
       inline
       :model="listQuery"
     >
-      <el-form-item label="seqNo">
-        <el-input v-model="listQuery.seqNo" placeholder="日志号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      </el-form-item>
-      <el-form-item label="日志类型">
-        <el-select v-model="listQuery.eventType" placeholder="请选择日志类型!" clearable style="width:200px" class="filter-item">
-          <el-option v-for="item in eventTypes" :key="item.code" :label="item.value" :value="item.code" />
-        </el-select>
-      </el-form-item>
-
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-        查询
+      <el-button style="float: right;" v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        打印
       </el-button>
-      <!--
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <el-button style="float: right;margin-right:10px;" v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-upload" @click="handleUpload">
+        导入
+      </el-button>
+      <el-button style="float: right;" v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         导出
       </el-button>
-     -->
+
     </el-form>
   </div>
 
@@ -30,7 +23,7 @@
     <el-table-column
       v-loading="loading"
       align="center"
-      label="ID"
+      label="序号"
       width="65"
       element-loading-text="请给我点时间！"
     >
@@ -38,40 +31,34 @@
         <span >{{ scope.row.id }}</span>
       </template>
     </el-table-column>
-    <el-table-column min-width="100px" label="seqNo">
+    <el-table-column min-width="100px" label="节点编号">
       <template slot-scope="{row}">
-        <span class="link-type" @click="handleUpdate(row)">{{ row.seqNo }}</span>
+        <span class="link-type" @click="handleUpdate(row)">{{ row.addr }}</span>
       </template>
     </el-table-column>
-    <el-table-column width="180px" align="center" label="操作时间">
+    <el-table-column width="180px" align="center" label="发生日期">
       <template slot-scope="scope">
-        <span>{{ scope.row.requestTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        <span>{{ scope.row.In_Time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column width="180px" align="center" label="配电箱号">
+      <template slot-scope="scope">
+        <span>{{ scope.row.pdcNo}}</span>
       </template>
     </el-table-column>
 
-    <el-table-column min-width="200px" label="请求内容" show-overflow-tooltip>
+    <el-table-column min-width="200px" label="事件" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.requestBody }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column width="110px" align="center" label="日志类型">
+    <el-table-column min-width="200px" align="center" label="安装位置">
       <template slot-scope="scope">
-        <span>{{ scope.row.eventTypeName }}</span>
+        <span>{{ scope.row.InstallPos }}</span>
       </template>
     </el-table-column>
 
-    <el-table-column width="120px" label="响应内容" show-overflow-tooltip>
-      <template slot-scope="scope">
-        <span>{{ scope.row.responseBody }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column width="120px" label="操作人" show-overflow-tooltip>
-      <template slot-scope="scope">
-        <span>{{ scope.row.createUserName }}</span>
-      </template>
-    </el-table-column>
 
   </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.currentPage" :limit.sync="listQuery.pageSize" @pagination="getList" />
@@ -80,10 +67,13 @@
 </template>
 
 <script>
-import { fetchEventLog } from '@/api/article'
+  import {fetchEvent, fetchHistory} from '@/api/article'
+import waves from '@/directive/waves'
 import Pagination from '@/components/Pagination'
+  import {parseTime} from "@/utils";
 export default {
   components: { Pagination },
+  directives: { waves },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -108,9 +98,10 @@ export default {
         currentPage: 1,
         pageSize: 5,
         eventType:'',
-        sort: '-id'
+        sort: '-addr'
       },
       loading: false,
+      downloadLoading:false,
       eventTypes: [{
         code:'65',value:"服务反馈/推送采集数据"
       }, {
@@ -143,7 +134,7 @@ export default {
     getList() {
       this.loading = true
       this.$emit('create') // for test
-      fetchEventLog(this.listQuery).then(response => {
+      fetchHistory(this.listQuery).then(response => {
         this.list = response.responseBody.map((e)=>{
           this.eventTypes.map((t)=>{
             if(t.code == e.eventType){
@@ -163,6 +154,45 @@ export default {
     },
     handleUpdate(row){
       this.$router.push({ name: 'logsDetail', params: { seqNo: row.seqNo,requestBody:row.requestBody,responseBody:row.responseBody }}) //
+    },
+    handleUpload(){
+      this.$router.push({ name: 'upload-history', params: {  }}) //
+    },
+    handleDownload() {
+      this.downloadLoading = true
+      var query={
+        url:"nodes",
+        data: {
+          pageSize:10000,
+          currentPage:1,
+          querySring:this.listQuery.querySring
+        }
+      };
+      fetchEvent(query).then(response => {
+        this.downloadList = response.responseBody;
+        import('@/vendor/Export2Excel').then(excel => {
+          const tHeader = ["节点地址","安装位置","名称","串口服务器IP","端口","雷击电流报警设定值","温度报警设定值","温升限值设定值","漏电流限值","脱扣","开关量1","开关量2","开关量3","开关量4","漏电流1","漏电流2","漏电流3","备注"]
+          const filterVal = ["addr","InstallPos","name","serialserver_ip","serialserver_port","TCurrentAlarm","TAlarm","TRiseMax","LCurrentMax","BOut","Switch1","Switch2","Switch3","Switch4","TCurrent1","TCurrent2","TCurrent3","descript"]
+          const data = this.formatJson(filterVal)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: '设备列表'
+          })
+          this.downloadLoading = false
+        })
+      })
+
+    },
+    formatJson(filterVal) {
+      return this.downloadList.map(v => filterVal.map(j => {
+        if (j === 'timestamp') {
+          return parseTime(v[j])
+        } else {
+          return v[j]
+        }
+      }))
+
     },
   }
 }
