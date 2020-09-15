@@ -2,7 +2,7 @@
   <div class="app-container" style="padding: 0;margin: 0">
     <div>
       <div style="float: right;">
-  <el-button :loading="downloadLoading" style="margin:5px;" type="primary" icon="el-icon-document" @click="handleDownload1" >
+  <el-button :loading="downloadLoading" v-permission="['admin1','admin2','blw']" style="margin:5px;" type="primary" icon="el-icon-document" @click="handleDownload1" >
     导出
   </el-button>
   <el-button :loading="downloadLoading" style="margin:5px;" type="primary" icon="el-icon-document" @click="handlePrint" >
@@ -62,8 +62,9 @@
 import { fetchEvent } from '@/api/article'
 import {formatTime, parseTime} from "@/utils";
 import store from "@/store";
-
+import permission from '@/directive/permission/index.js'
 export default {
+  directives: { permission},
   filters: {
     statusFilter(status) {
       const statusMap = {

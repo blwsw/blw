@@ -23,7 +23,7 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+      <el-button class="filter-item"  v-permission="['admin1','blw']" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
         新增
       </el-button><!--
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
@@ -76,7 +76,7 @@
 
       <el-table-column label="Actions" align="center" min-width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <el-button type="primary" v-permission="['admin1','blw']" size="mini" @click="handleUpdate(row)">
             修改
           </el-button>
          <!-- <el-button v-if="row.status!='published'" size="mini" type="success" @click="handleModifyStatus(row,'published')">
@@ -85,7 +85,7 @@
           <el-button v-if="row.status!='draft'" size="mini" @click="handleModifyStatus(row,'draft')">
             Draft
           </el-button>-->
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
+          <el-button v-if="row.status!='deleted'" v-permission="['admin1','blw']" size="mini" type="danger" @click="handleDelete(row,$index)">
             删除
           </el-button>
         </template>
@@ -142,6 +142,8 @@ import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import permission from '@/directive/permission/index.js' // 权限判断指令
+import checkPermission from '@/utils/permission' // 权限判断函数
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
@@ -159,7 +161,7 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 export default {
   name: 'user-manager',
   components: { Pagination },
-  directives: { waves },
+  directives: { waves ,permission},
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -188,9 +190,9 @@ export default {
         sort: '+id'
       },
       userroles: [{
-        code:'admin',value:"超级管理员"
+        code:'admin1',value:"超级管理员"
       }, {
-        code:'editor',value:"管理员"
+        code:'admin2',value:"管理员"
       }, {
         code:'admin3',value:"操作员"
       }],
@@ -303,6 +305,7 @@ export default {
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
+      this.temp.password = "";
       this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true

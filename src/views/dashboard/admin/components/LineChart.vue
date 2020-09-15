@@ -37,7 +37,13 @@ export default {
   },
   data() {
     return {
-      chart: null
+      chart: null,
+      lineChartData: {
+        expectedData:[0, 0, 0, 0, 0, 0, 0],
+        actualData:[0, 0, 0, 0, 0, 0, 0]
+      },
+      azcount:0,
+      reals:[],
     }
   },
   watch: {
@@ -46,7 +52,7 @@ export default {
       handler(val) {
         this.setOptions(val)
       }
-    }
+    },
   },
   mounted() {
     this.$nextTick(() => {
@@ -66,6 +72,7 @@ export default {
       this.setOptions(this.chartData)
     },
     setOptions({ expectedData, actualData } = {}) {
+      console.log(expectedData)
       this.chart.setOption({
         title: {
           text: '近7天状态折线图',
@@ -138,7 +145,64 @@ export default {
           animationEasing: 'quadraticOut'
         }]
       })
-    }
+    },
+    appendData(data){//近一周状况
+      var context = this;
+
+      for(var i=0;i<this.dataweek.length;i++){
+        var days = this.dataweek[i];
+        this.reals = this.reals.map((item)=>{
+          let daye = context.getDayByTime(item.In_Time);
+
+          if( days == daye){
+            //故障标志位，T有故障，F无故障，D离线
+            if(item.ErrFlag == 'T'){
+              context.lineChartData.expectedData[i] ++;
+            }
+            if(item.TTime){
+              context.lineChartData.actualData[i] +=item.TTime;
+            }
+            //01预警
+            if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
+              item.ErrTemp=='01' || item.ErrLC3=='01'
+            ){
+              context.lineChartData.expectedData[i] ++;
+            }
+
+            //10预警
+            if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
+              item.ErrTemp=='10' || item.ErrLC3=='10'
+            ){
+              context.lineChartData.expectedData[i] ++;
+            }
+            console.log(context.lineChartData)
+            this.setOptions(context.lineChartData)
+          }
+          return item;
+        });
+      }
+      this.lineChartData = context.lineChartData;
+      console.log(this.dataweek);
+      console.log(this.reals);
+      console.log(this.lineChartData);
+
+    },
+    doHandleMonth(month) {
+      var m = month;
+      if (month.toString().length == 1) {
+        m = "0" + month;
+      }
+      return m;
+    },
+    getDayByTime(inTime){
+      var today = new Date(inTime);
+      var tYear = today.getFullYear();
+      var tMonth = today.getMonth();
+      var tDate = today.getDate();
+      tMonth = this.doHandleMonth(tMonth + 1);
+      tDate =  this.doHandleMonth(tDate);
+      return tYear+"-"+tMonth+"-"+tDate;
+    },
   }
 }
 </script>

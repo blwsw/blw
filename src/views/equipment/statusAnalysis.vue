@@ -89,6 +89,7 @@ export default {
         expectedData:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         actualData:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       },
+      expectedData:[],
       pieChartData:[
         { value: 0, name: '正常' ,itemStyle:{color:"#65d186"}},
         { value: 0, name: '故障',itemStyle:{color:"#f29e3c"} },
@@ -167,6 +168,7 @@ export default {
     }
   },
   created() {
+    this.expectedData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     var day = null;
     for(let i=4;i>=0;i--){
       day = this.getWeek(-i);
@@ -230,16 +232,16 @@ export default {
         this.getTimeStatusCounts();
       })
     },
-    getTTimeCount(item){//获取雷击数
+    getTTimeCount(item){ //获取雷击数
       //本年月份的雷击次数
       var fdate = new Date(item.In_Time);
-      var expectedData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
       for(var i=0;i<12;i++){
          if(i== fdate.getMonth()){
-           expectedData[i]+=item.TTime;
+           this.expectedData[i]+=item.TTime;
          }
       }
-      this.lineChartData.expectedData =expectedData;
+      this.lineChartData.expectedData =this.expectedData;
     },
     getTimeStatusCounts(){//近一周的状态数据
       // console.log(this.statusChart);

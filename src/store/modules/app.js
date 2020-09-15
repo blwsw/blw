@@ -63,7 +63,7 @@ const actions = {
   setSize({ commit }, size) {
     commit('SET_SIZE', size)
   },
-  getReals({ commit },reals){
+  async getReals({ commit },reals){
     return new Promise(resolve => {
       var obj = {
         url: 'get/reals',

@@ -6,25 +6,25 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate" v-permission="['admin1','admin2','blw']">
         新增
       </el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-upload" @click="handleDoSend">
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-upload" @click="handleDoSend" v-permission="['admin1','blw']">
         下发
       </el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-upload" @click="handleUpload">
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-upload" @click="handleUpload" v-permission="['admin1','admin2','blw']">
         导入
       </el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload" v-permission="['admin1','admin2','blw']">
         导出
       </el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" @click="handleDeviceInit">
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" @click="handleDeviceInit" v-permission="['admin1','blw']">
         服务初始化
       </el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" @click="handleClearFault">
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" @click="handleClearFault" v-permission="['admin1','blw']">
         清除故障
       </el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" @click="handleGetNewData">
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" @click="handleGetNewData" v-permission="['admin1','blw']">
         获取实时参数
       </el-button>
     </div>
@@ -212,6 +212,7 @@
 <script>
 import { fetchEvent, fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
+import permission from '@/directive/permission/index.js' // 权限判断指令
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination/index'
 import {deleteRole} from "@/api/role"; // secondary package based on el-pagination
@@ -237,7 +238,7 @@ const qyjyKeyValue = qyjyOptions.reduce((acc, cur) => {
 export default {
   name: 'deviceManager',
   components: { Pagination },
-  directives: { waves },
+  directives: { waves,permission },
   filters: {
     statusFilter(status) {//0禁用 1启用
       const statusMap = {

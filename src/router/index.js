@@ -113,7 +113,7 @@ export const asyncRoutes = [
     meta: {
       title: '用户管理',
       icon: 'peoples',
-      roles: ['admin', 'editor', 'blw'] // you can set roles in root nav
+      roles: ['admin', 'admin1','admin2','admin3','editor', 'blw'] // you can set roles in root nav
     },
     children: [
       {
@@ -122,7 +122,7 @@ export const asyncRoutes = [
         name: 'user-manager',
         meta: {
           title: '用户管理',
-          roles: ['admin', 'editor', 'blw'] // or you can only set roles in sub nav
+          roles: ['admin', 'admin1','admin2','admin3','editor', 'blw'] // or you can only set roles in sub nav
         }
       }
 
@@ -137,7 +137,7 @@ export const asyncRoutes = [
     meta: {
       title: '雷电防护系统',
       icon: 'lock',
-      roles: ['admin', 'editor', 'blw'] // you can set roles in root nav
+      roles: ['admin', 'admin1','admin2','admin3','editor', 'blw'] // you can set roles in root nav
     },
     children: [
       {
@@ -146,7 +146,7 @@ export const asyncRoutes = [
         name: 'statusAnalysis',
         meta: {
           title: '设备状态概览',
-          roles: ['admin', 'blw', 'editor'] // or you can only set roles in sub nav
+          roles: ['admin', 'blw', 'admin1','admin2','admin3','editor'] // or you can only set roles in sub nav
         }
       },
       {
@@ -156,7 +156,7 @@ export const asyncRoutes = [
         meta: {
           title: '设备分布列表',
           // if do not set roles, means: this page does not require permission
-          roles: ['admin', 'blw', 'editor']
+          roles: ['admin', 'blw', 'admin1','admin2','admin3','editor']
         }
       },
       {
@@ -174,19 +174,19 @@ export const asyncRoutes = [
         name: 'deviceManage',
         meta: {
           title: '设备管理',
-          roles: ['admin', 'editor', 'blw']
+          roles: ['admin', 'admin1','admin2','admin3','editor', 'blw']
         }
       },{
         path: 'upload-device',
         name: 'upload-device',
         component: () => import('@/views/device-manage/upload-device'),
-        meta: { title: '导入设备', icon: 'dashboard',roles: ['admin', 'editor', 'blw']},
+        meta: { title: '导入设备', icon: 'dashboard',roles: ['admin', 'admin1','admin2','admin3','editor', 'blw']},
         hidden: true
       },{
         path: 'device-detail',
         name: 'device-detail',
         component: () => import('@/views/device-manage/device-detail'),
-        meta: { title: '设备详情', icon: 'dashboard',roles: ['admin', 'editor', 'blw']},
+        meta: { title: '设备详情', icon: 'dashboard',roles: ['admin', 'admin1','admin2','admin3','editor', 'blw']},
         hidden: true
       },
       {
@@ -221,12 +221,12 @@ export const asyncRoutes = [
         path: 'logs',
         component: () => import('@/views/logs/index'),
         name: 'logsQuery',
-        meta: { title: '日志查询', icon: 'dashboard',roles: ['admin', 'editor', 'blw']}
+        meta: { title: '日志查询', icon: 'dashboard',roles: ['admin', 'admin1','admin2','admin3','editor', 'blw']}
       },{
         path: '/logs/detail',
         name: 'logsDetail',
         component: () => import('@/views/logs/logsDetail.vue'),
-        meta: { title: '日志详情', icon: 'dashboard',roles: ['admin', 'editor', 'blw']},
+        meta: { title: '日志详情', icon: 'dashboard',roles: ['admin', 'admin1','admin2','admin3','editor', 'blw']},
         hidden: true
       }
     ]

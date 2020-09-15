@@ -64,6 +64,12 @@ export default {
   components: {
     CountTo
   },
+  props: {
+    chartData: {
+      type: Array,
+      required: true
+    }
+  },
   mounted() {
     this.getReals();
   },
@@ -88,7 +94,16 @@ export default {
         this.reals = newValue;
          this.appendData(newValue);
       }
-    }
+    },
+    chartData: {
+      deep: true,
+      handler(val) {
+         this.zccount = val[0].value;
+         this.gzcount= val[1].value;
+         this.yjcount= val[2].value;
+         this.bjcount= val[3].value;
+      }
+    },
   },
   methods: {
     handleSetLineChartData(type) {
@@ -97,7 +112,7 @@ export default {
     async getReals(){
       this.relas = this.$store.state.app.reals
       if(!this.relas || this.relas.length ==0){
-        this.relas = await store.dispatch('app/getReals',{reload:true} )
+        // this.relas = await store.dispatch('app/getReals',{reload:true} )
       }
       this.appendData(this.relas);
     },

@@ -2,7 +2,7 @@
   <div class="dashboard-editor-container">
     <!--<github-corner class="github-corner" />-->
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+    <panel-group @handleSetLineChartData="handleSetLineChartData"  :chart-data="pieChartData" />
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData" :weeks="weeks" />
@@ -89,10 +89,12 @@ export default {
   },
   data() {
     return {
-      lineChartData: {
+      lineChartData : {
         expectedData:[0, 0, 0, 0, 0, 0, 0],
         actualData:[0, 0, 0, 0, 0, 0, 0]
       },
+      expectedData:[0, 0, 0, 0, 0, 0, 0],
+      actualData:[0, 0, 0, 0, 0, 0, 0],
       pieChartData:[
         { value: 0, name: '正常' ,itemStyle:{color:"#65d186"}},
         { value: 0, name: '故障',itemStyle:{color:"#f29e3c"} },
@@ -141,11 +143,16 @@ export default {
     }
     this.reals = this.$store.state.app.reals;
     if(!this.relas || this.relas.length ==0){
-      //this.relas = store.dispatch('app/getReals',{reload:true} )
+      this.getReals();
     }
 
   },
   methods: {
+    async getReals(){
+      this.relas = await store.dispatch('app/getReals',{reload:true} );
+      await store.dispatch('app/setReals', this.relas);
+      this.appendData(this.relas);
+    },
     getWeek (day) {
       var today = new Date();
       var targetday_milliseconds=today.getTime() + 1000*60*60*24*day;
@@ -176,6 +183,37 @@ export default {
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
     },
+    getTTimeCount(item){ //获取雷击数
+      //本年月份的雷击次数
+      var fdate = this.getDayByTime(item.In_Time);
+      for(var i=0;i<this.dataweek.length;i++){
+        var days = this.dataweek[i];
+        if(days== fdate){
+          this.actualData[i]+=item.TTime;
+          //故障标志位，T有故障，F无故障，D离线
+          if(item.ErrFlag == 'T'){
+            this.expectedData[i] ++;
+          }
+
+          //01预警
+          if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
+            item.ErrTemp=='01' || item.ErrLC3=='01'
+          ){
+            this.expectedData[i] ++;
+          }
+
+          //10预警
+          if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
+            item.ErrTemp=='10' || item.ErrLC3=='10'
+          ){
+            this.expectedData[i] ++;
+          }
+
+        }
+      }
+      this.lineChartData.actualData =this.actualData;
+      this.lineChartData.expectedData =this.expectedData;
+    },
     appendData(data){//近一周状况
       var context = this;
       context.azcount= this.reals.length;
@@ -184,7 +222,7 @@ export default {
         this.reals = this.reals.map((item)=>{
           item.ErrLeihuaStatusName = this.getStatusName(item.ErrLeihua);
           let daye = context.getDayByTime(item.In_Time);
-
+          context.getTTimeCount(item);
           item.colorss = '#65d186';
           //totalList计算total
           //故障标志位，T有故障，F无故障，D离线
@@ -216,29 +254,6 @@ export default {
             item.ErrTemp=='10' || item.ErrLC3=='10'
           ){
             context.pieChartData[2].value ++;
-          }
-
-          if( days == daye){
-            //故障标志位，T有故障，F无故障，D离线
-            if(item.ErrFlag == 'T'){
-              context.lineChartData.expectedData[i] ++;
-            }
-            if(item.TTime){
-              context.lineChartData.actualData[i] +=item.TTime;
-            }
-            //01预警
-            if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
-              item.ErrTemp=='01' || item.ErrLC3=='01'
-            ){
-              context.lineChartData.expectedData[i] ++;
-            }
-
-            //10预警
-            if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
-              item.ErrTemp=='10' || item.ErrLC3=='10'
-            ){
-              context.lineChartData.expectedData[i] ++;
-            }
           }
           return item;
         });
