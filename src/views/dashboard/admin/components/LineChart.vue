@@ -121,7 +121,7 @@ export default {
             lineStyle:{
               color:'#5154de',
               width: 1,
-              type: 'solid'
+              type: 'dotted'
             }
           },
           splitArea : {show : false}//保留网格区域
@@ -173,9 +173,9 @@ export default {
           zoom: 1.2,
           itemStyle: {
             normal: {
-              color: '#c79848',
+              color: '#ef9909',
               lineStyle: {
-                color: '#c79848',
+                color: '#ef9909',
                 width: 2
               },
               areaStyle: {

@@ -27,7 +27,7 @@
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper" style="width: 100%;">
           <div style="margin: 0px 0px 5px 20px;color: #279cd5;"> 设备巡检状态 </div>
-          <el-table id="tableList" :data="reals" border fit highlight-current-row style="width: 100%;height: 326px;overflow-y: auto;background: transparent;" ref="tablelist">
+          <el-table id="tableList" cell-style="background: #484bc7" header-cell-style="background: #484bc7" :data="reals" border fit highlight-current-row style="width: 100%;height: 280px;overflow-y: auto;background: #484bc7;" ref="tablelist">
             <el-table-column
               v-loading="loading"
               align="center"
@@ -35,9 +35,10 @@
               min-width="40px"
               element-loading-text="请给我点时间！"
 
+
             >
               <template slot-scope="srow">
-                <span v-bind:style="{color:srow.row.colorss}" > {{srow.$index+1}} </span>
+                <span  v-bind:style="{color:srow.row.colorss}" > {{srow.$index+1}} </span>
               </template>
             </el-table-column>
             <el-table-column  min-width="50px" label="节点编号" show-overflow-tooltip >
@@ -297,5 +298,9 @@ export default {
   .chart-wrapper {
     padding: 8px;
   }
+}
+/* 设置table header的背景颜色 */
+.eltd {
+  background-color:#484bc7;
 }
 </style>

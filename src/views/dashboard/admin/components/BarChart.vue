@@ -71,7 +71,16 @@ export default {
           type: 'value',
           axisTick: {
             show: false
-          }
+          },
+          splitLine: {
+            show: true,
+            lineStyle:{
+              color:'#5154de',
+              width: 1,
+              type: 'dotted'
+            }
+          },
+          splitArea : {show : false}//保留网格区域
         }],
         series: [{
           name: 'pageA',
