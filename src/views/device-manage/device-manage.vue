@@ -593,6 +593,22 @@ export default {
          }
       }
 
+      var query={
+        url:"nodes/getParams",
+        data: {},
+        methods:"put",
+        params:{addrs}
+      };
+      fetchEvent(query).then(response => {
+        this.$notify({
+          title: '成功',
+          message: '设备参数获取成功，等设备响应后数据更新',
+          type: 'success',
+          duration: 2000
+        })
+        this.listLoading = false
+      })
+
     }
   }
 }

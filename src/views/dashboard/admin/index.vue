@@ -4,7 +4,7 @@
 
     <panel-group @handleSetLineChartData="handleSetLineChartData"  :chart-data="pieChartData" />
 
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+    <el-row style="padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData" :weeks="weeks" />
     </el-row>
 
@@ -27,7 +27,7 @@
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper" style="width: 100%;">
           <div style="margin: 0px 0px 5px 20px;color: #279cd5;"> 设备巡检状态 </div>
-          <el-table id="tableList" :data="reals" border fit highlight-current-row style="width: 100%;height: 326px;overflow-y: auto;" ref="tablelist">
+          <el-table id="tableList" :data="reals" border fit highlight-current-row style="width: 100%;height: 326px;overflow-y: auto;background: transparent;" ref="tablelist">
             <el-table-column
               v-loading="loading"
               align="center"
@@ -217,47 +217,44 @@ export default {
     appendData(data){//近一周状况
       var context = this;
       context.azcount= this.reals.length;
-      for(var i=0;i<this.dataweek.length;i++){
-        var days = this.dataweek[i];
-        this.reals = this.reals.map((item)=>{
-          item.ErrLeihuaStatusName = this.getStatusName(item.ErrLeihua);
-          let daye = context.getDayByTime(item.In_Time);
-          context.getTTimeCount(item);
+      this.reals = this.reals.map((item)=>{
+        item.ErrLeihuaStatusName = this.getStatusName(item.ErrLeihua);
+        let daye = context.getDayByTime(item.In_Time);
+        context.getTTimeCount(item);
+        item.colorss = '#65d186';
+        //totalList计算total
+        //故障标志位，T有故障，F无故障，D离线
+        if(item.ErrFlag == 'F'){
+          context.pieChartData[0].value ++;
           item.colorss = '#65d186';
-          //totalList计算total
-          //故障标志位，T有故障，F无故障，D离线
-          if(item.ErrFlag == 'F'){
-            context.pieChartData[0].value ++;
-            item.colorss = '#65d186';
-          }
-          if(item.ErrFlag == 'T'){
-            context.pieChartData[1].value ++;
-            item.colorss = '#f29e3c';
-          }
-          if(item.ErrFlag == 'D'){
-            // context.totalList[4].count ++;
-            item.colorss = '#f67287';
-          }else{
-            // context.zxcount++;
-          }
-          // context.azcount++;
+        }
+        if(item.ErrFlag == 'T'){
+          context.pieChartData[1].value ++;
+          item.colorss = '#f29e3c';
+        }
+        if(item.ErrFlag == 'D'){
+          // context.totalList[4].count ++;
+          item.colorss = '#f67287';
+        }else{
+          // context.zxcount++;
+        }
+        // context.azcount++;
 
-          //01预警
-          if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
-            item.ErrTemp=='01' || item.ErrLC3=='01'
-          ){
-            context.pieChartData[3].value ++;
-          }
+        //01预警
+        if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
+          item.ErrTemp=='01' || item.ErrLC3=='01'
+        ){
+          context.pieChartData[3].value ++;
+        }
 
-          //10预警
-          if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
-            item.ErrTemp=='10' || item.ErrLC3=='10'
-          ){
-            context.pieChartData[2].value ++;
-          }
-          return item;
-        });
-      }
+        //10预警
+        if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
+          item.ErrTemp=='10' || item.ErrLC3=='10'
+        ){
+          context.pieChartData[2].value ++;
+        }
+        return item;
+      });
     },
     getStatusName(incode){
       if(!incode){
@@ -279,7 +276,7 @@ export default {
 <style lang="scss" scoped>
 .dashboard-editor-container {
   padding: 32px;
-  background-color: rgb(240, 242, 245);
+  background-color: #2E3092;
   position: relative;
 
   .github-corner {
@@ -290,7 +287,7 @@ export default {
   }
 
   .chart-wrapper {
-    background: #fff;
+    background: #484bc7;
     padding: 16px 16px 0;
     margin-bottom: 32px;
   }

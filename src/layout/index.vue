@@ -92,26 +92,32 @@ export default {
       // 根据服务器推送的消息做自己的业务处理
       console.log('服务端返回：' + event.data)
       if (event.data){
-        var newData = JSON.parse(event.data)
-        newData.In_Time = this.parseTime1(newData.In_Time);
-        //新数据追加进去
-        this.relas = this.$store.state.app.reals;
-        if(!this.relas || this.relas.length ==0){
-          this.relas = store.dispatch('app/getReals',{reload:true} )
-        }else{
-          this.relas.some((item, i) => {
-            if (item.addr == newData.addr){
-              this.relas.splice(i,1)
-              // 在数组的some方法中，如果return true，就会立即终止这个数组的后续循环,所以相比较foreach，如果想要终止循环，那么建议使用some
-              return true
-            }
-          })
+        var redata = event.data;
+        redata = JSON.parse(redata)
+        if(redata.type == 'real'){
+          var newData = redata.data;
+          newData.In_Time = this.parseTime1(newData.In_Time);
+          //新数据追加进去
+          this.relas = this.$store.state.app.reals;
+          if(!this.relas || this.relas.length ==0){
+            this.relas = store.dispatch('app/getReals',{reload:true} )
+          }else{
+            this.relas.some((item, i) => {
+              if (item.addr == newData.addr){
+                this.relas.splice(i,1)
+                // 在数组的some方法中，如果return true，就会立即终止这个数组的后续循环,所以相比较foreach，如果想要终止循环，那么建议使用some
+                return true
+              }
+            })
+          }
+          this.relas.unshift(newData)
+          store.dispatch('app/setReals',this.relas)
         }
-        this.relas.unshift(newData)
-        store.dispatch('app/setReals',this.relas)
+
       }
 
     },
+
     parseTime1(dateobj){
       var datestr = dateobj.year + '-' + dateobj.monthValue + '-' + dateobj.dayOfMonth +' '+ dateobj.hour+':'+dateobj.minute+':'+dateobj.second
       return datestr;
