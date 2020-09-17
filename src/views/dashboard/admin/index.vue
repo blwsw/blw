@@ -27,7 +27,7 @@
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper" style="width: 100%;">
           <div style="margin: 0px 0px 5px 20px;color: #279cd5;"> 设备巡检状态 </div>
-          <el-table id="tableList" cell-style="background: #484bc7" header-cell-style="background: #484bc7" :data="reals" border fit highlight-current-row style="width: 100%;height: 280px;overflow-y: auto;background: #484bc7;" ref="tablelist">
+          <el-table id="tableList" :data="reals" border fit highlight-current-row style="width: 100%;height: 326px;overflow-y: auto;" ref="tablelist">
             <el-table-column
               v-loading="loading"
               align="center"
@@ -277,7 +277,7 @@ export default {
 <style lang="scss" scoped>
 .dashboard-editor-container {
   padding: 32px;
-  background-color: #2E3092;
+  background-color: rgb(240, 242, 245);
   position: relative;
 
   .github-corner {
@@ -288,7 +288,7 @@ export default {
   }
 
   .chart-wrapper {
-    background: #484bc7;
+    background: #fff;
     padding: 16px 16px 0;
     margin-bottom: 32px;
   }
@@ -298,9 +298,5 @@ export default {
   .chart-wrapper {
     padding: 8px;
   }
-}
-/* 设置table header的背景颜色 */
-.eltd {
-  background-color:#484bc7;
 }
 </style>

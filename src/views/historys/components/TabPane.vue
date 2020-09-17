@@ -64,22 +64,22 @@
     </el-table-column>
     <el-table-column min-width="40px" label="温度劣化故障代码" show-overflow-tooltip>
       <template slot-scope="{row}">
-        <span>{{ row.ErrTempLeihua |GZFilter}}</span>
+        <span>{{ row.ErrLeihua |GZFilter}}</span>
       </template>
     </el-table-column>
     <el-table-column min-width="40px" label="漏电劣化1故障代码" show-overflow-tooltip>
       <template slot-scope="{row}">
-        <span>{{ row.ErrLCLeihua1 |GZFilter}}</span>
+        <span>{{ row.ErrLC1 |GZFilter}}</span>
       </template>
     </el-table-column>
     <el-table-column min-width="40px" label="漏电劣化2故障代码" show-overflow-tooltip>
       <template slot-scope="{row}">
-        <span>{{ row.ErrLCLeihua2 |GZFilter}}</span>
+        <span>{{ row.ErrLC2 |GZFilter}}</span>
       </template>
     </el-table-column>
     <el-table-column min-width="40px" label="漏电劣化3故障代码" show-overflow-tooltip>
       <template slot-scope="{row}">
-        <span>{{ row.ErrLCLeihua3 |GZFilter}}</span>
+        <span>{{ row.ErrLC3 |GZFilter}}</span>
       </template>
     </el-table-column>
     <el-table-column min-width="200px" align="center" label="安装位置">
@@ -209,8 +209,8 @@ export default {
       fetchEvent(query).then(response => {
         this.downloadList = response.responseBody;
         import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ["节点地址","安装位置","名称","串口服务器IP","端口","雷击电流报警设定值","温度报警设定值","温升限值设定值","漏电流限值","脱扣","开关量1","开关量2","开关量3","开关量4","漏电流1","漏电流2","漏电流3","备注"]
-          const filterVal = ["addr","InstallPos","name","serialserver_ip","serialserver_port","TCurrentAlarm","TAlarm","TRiseMax","LCurrentMax","BOut","Switch1","Switch2","Switch3","Switch4","TCurrent1","TCurrent2","TCurrent3","descript"]
+          const tHeader = ["节点地址","安装位置","名称","串口服务器IP","端口","故障标志位","雷击故障代码","温度故障代码","温度劣化故障代码","漏电劣化1故障代码","漏电劣化2故障代码","漏电劣化3故障代码","备注"]
+          const filterVal = ["addr","InstallPos","name","serialserver_ip","serialserver_port","ErrFlag","ErrThunder","ErrTemp","ErrLeihua","ErrLC1","ErrLC2","ErrLC3","descript"]
           const data = this.formatJson(filterVal)
           excel.export_json_to_excel({
             header: tHeader,

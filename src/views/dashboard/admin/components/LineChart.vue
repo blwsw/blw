@@ -72,7 +72,6 @@ export default {
       this.setOptions(this.chartData)
     },
     setOptions({ expectedData, actualData } = {}) {
-      console.log(expectedData)
       this.chart.setOption({
         title: {
           text: '近7天状态折线图',
@@ -84,26 +83,14 @@ export default {
           boundaryGap: false,
           axisTick: {
             show: false
-          },
-          splitLine:{
-            show:false,
-            lineStyle:{
-              color:'#5154de',
-              width: 1,
-              type: 'solid'
-            }
-          },
-          splitArea : {show : false}//保留网格区域
+          }
         },
         grid: {
           left: 10,
           right: 10,
           bottom: 20,
           top: 30,
-          containLabel: true,
-          show:true,
-          backgroundColor: '#2E3092', //背景渐变色
-          borderColor: "rgba(0,0,0,0)"
+          containLabel: true
         },
         tooltip: {
           trigger: 'axis',
@@ -115,48 +102,19 @@ export default {
         yAxis: {
           axisTick: {
             show: false
-          },
-          splitLine: {
-            show: true,
-            lineStyle:{
-              color:'#5154de',
-              width: 1,
-              type: 'dotted'
-            }
-          },
-          splitArea : {show : false}//保留网格区域
-        },
-        legend: {
-          data: ['警报数', '雷击数'],
-          textStyle: {
-            color: "#fff",
-            fontSize: 12
           }
         },
+        legend: {
+          data: ['警报数', '雷击数']
+        },
         series: [{
-          name: '警报数',
-          aspectScale: 0,
-          zoom: 1.2,
-          itemStyle: {
+          name: '警报数', itemStyle: {
             normal: {
               color: '#FF005A',
               lineStyle: {
                 color: '#FF005A',
                 width: 2
-              },
-              areaStyle : {
-                type : 'default',
-                //渐变色实现
-                color : "#2E3092"
-              },
-            }
-          },
-          //以及在折线图每个日期点顶端显示数字
-          label: {
-            show: true,
-            position: 'top',
-            textStyle: {
-              color: 'white'
+              }
             }
           },
           smooth: true,
@@ -169,26 +127,16 @@ export default {
           name: '雷击数',
           smooth: true,
           type: 'line',
-          aspectScale: 0.75,
-          zoom: 1.2,
           itemStyle: {
             normal: {
-              color: '#ef9909',
+              color: '#3888fa',
               lineStyle: {
-                color: '#ef9909',
+                color: '#3888fa',
                 width: 2
               },
               areaStyle: {
-                 color: '#2E3092'
+                color: '#f3f8ff'
               }
-            }
-          },
-          //以及在折线图每个日期点顶端显示数字
-          label: {
-            show: true,
-            position: 'top',
-            textStyle: {
-              color: 'white'
             }
           },
           data: actualData,

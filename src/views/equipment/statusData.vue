@@ -82,25 +82,8 @@ export default {
 <style scoped>
   .tab-container {
     margin: 5px;
-    background-color:#2E3092;
   }
-  .blw /deep/ .el-tabs--border-card>.el-tabs__header{
-    background: #2c3e50;
-  }
-  .blw /deep/ .el-tabs--border-card{
-    background: transparent;
-  }
-  .blw/deep/ .el-tabs--border-card>.el-tabs__header{
-    background:#08356b;
-    border: 0px;
-  }
-  .blw/deep/.el-tabs--border-card > .el-tabs__header .el-tabs__item{
-    color: #1890ff;
-  }
-  .blw/deep/.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active{
-    background:#2E3092;
-    border-right-color: #2E3092;
-    border-left-color: #2E3092;
-    color: #fff;
+  .el-tabs__content{
+    padding: 0;
   }
 </style>

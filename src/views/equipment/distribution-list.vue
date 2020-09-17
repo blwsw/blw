@@ -207,7 +207,7 @@ export default {
 
 <style lang="scss" scoped>
 .mixin-components-container {
-  background-color: #2E3092;
+  background-color: #f0f2f5;
   padding: 20px;
   min-height: calc(100vh - 84px);
 }
@@ -253,8 +253,8 @@ export default {
     font-size: 12px;
     position: relative;
     overflow: hidden;
-    color: #fff;
-    background: #484bc7;
+    color: #666;
+    background: #fff;
     box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
     border-color: rgba(0, 0, 0, .05);
 
@@ -319,7 +319,7 @@ export default {
 
       .card-panel-text {
         line-height: 18px;
-        color: #c8d8ef;
+        color: rgba(0, 0, 0, 0.45);
         font-size: 16px;
         margin-bottom: 10px;
       }
