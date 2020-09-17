@@ -106,7 +106,7 @@ export default {
       total:0,
       listQuery: {
         currentPage: 1,
-        pageSize: 5,
+        pageSize: 10,
         eventType:'',
         sort: '-id'
       },

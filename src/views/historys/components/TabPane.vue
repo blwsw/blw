@@ -8,10 +8,10 @@
       <el-button style="float: right;" v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         打印
       </el-button>
-      <el-button style="float: right;margin-right:10px;" v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-upload" @click="handleUpload">
+      <el-button style="float: right;margin-right:10px;" v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-upload" @click="handleUpload" v-permission="['admin1','blw']">
         导入
       </el-button>
-      <el-button style="float: right;" v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <el-button style="float: right;" v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" v-permission="['admin1','admin2','blw']" @click="handleDownload">
         导出
       </el-button>
 
@@ -100,9 +100,10 @@
 import waves from '@/directive/waves'
 import Pagination from '@/components/Pagination'
   import {parseTime} from "@/utils";
+  import permission from "@/directive/permission";
 export default {
   components: { Pagination },
-  directives: { waves },
+  directives: { waves ,permission},
   filters: {
     statusFilter(status) {
       const statusMap = {//故障标志位，T有故障，F无故障，D离线

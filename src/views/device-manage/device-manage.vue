@@ -263,7 +263,7 @@ export default {
       listLoading: true,
       listQuery: {
         currentPage: 1,
-        pageSize: 15,
+        pageSize: 10,
         querySring: undefined,
         sort: '+addr'
       },

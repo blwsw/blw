@@ -1,9 +1,9 @@
 <template>
-  <div class="tab-container">
+  <div class="tab-container blw">
     <!--<el-tag>mounted times ：{{ createdTimes }}</el-tag>
     <el-alert :closable="false" style="width:200px;display:inline-block;vertical-align: middle;margin-left:30px;" title="Tab with keep-alive" type="success" />-->
-    <el-tabs v-model="activeName" style="" type="border-card">
-      <el-tab-pane v-for="item in tabMapOptions" :key="item.key" :label="item.label" :name="item.key">
+    <el-tabs v-model="activeName" type="border-card">
+      <el-tab-pane v-for="item in tabMapOptions"  :key="item.key" :label="item.label" :name="item.key">
         <keep-alive>
           <TabPane v-if="'L1'==item.key" :type="item.key" @getDataList="getList" @create="showCreatedTimes" :dataList="dataList" />
           <TabPaneL2 v-if="'L2'==item.key" :type="item.key" @getDataList="getList" @create="showCreatedTimes" :dataList="dataList" />
@@ -82,8 +82,25 @@ export default {
 <style scoped>
   .tab-container {
     margin: 5px;
+    background-color:#2E3092;
   }
-  .el-tabs__content{
-    padding: 0;
+  .blw /deep/ .el-tabs--border-card>.el-tabs__header{
+    background: #2c3e50;
+  }
+  .blw /deep/ .el-tabs--border-card{
+    background: transparent;
+  }
+  .blw/deep/ .el-tabs--border-card>.el-tabs__header{
+    background:#08356b;
+    border: 0px;
+  }
+  .blw/deep/.el-tabs--border-card > .el-tabs__header .el-tabs__item{
+    color: #1890ff;
+  }
+  .blw/deep/.el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active{
+    background:#2E3092;
+    border-right-color: #2E3092;
+    border-left-color: #2E3092;
+    color: #fff;
   }
 </style>

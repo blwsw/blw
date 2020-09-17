@@ -54,12 +54,12 @@
 
       <div style="position:relative">
         <div class="tips">
-          <span>{{ $t('login.username') }} : admin</span>
+          <span>{{ $t('login.username') }} : admin1(超级管理员)</span>
           <span>{{ $t('login.password') }} : {{ $t('123456') }}</span>
         </div>
         <div class="tips">
           <span style="margin-right:18px;">
-            {{ $t('login.username') }} : editor
+            {{ $t('login.username') }} : admin2(管理员),admin3(操作员)
           </span>
           <span>{{ $t('login.password') }} : {{ $t('123456') }}</span>
         </div>

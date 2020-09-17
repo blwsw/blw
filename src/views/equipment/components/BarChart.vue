@@ -81,6 +81,9 @@ export default {
       this.chart.setOption({
         title:{
           text: this.date || '时间段',
+          style:{
+            color:'#fff',
+          },
           subtext: '',
           left: 'left',
         },
@@ -111,7 +114,16 @@ export default {
           type: 'value',
           axisTick: {
             show: true
-          }
+          },
+          splitLine: {
+            show: true,
+            lineStyle:{
+              color:'#5154de',
+              width: 1,
+              type: 'dotted'
+            }
+          },
+          splitArea : {show : false}//保留网格区域
         }],
         series: [{
           name: '数量',

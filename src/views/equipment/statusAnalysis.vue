@@ -1,10 +1,10 @@
 <template>
   <div class="dashboard-editor-container">
     <div class="chart-wrapper">
-    <div style="margin: 0px 0px 5px 20px;color: #279cd5;"> 设备状态分析 </div>
-    <el-row :gutter="0">
+    <div style="margin: 0px 0px 5px 20px;color: #fff;"> 设备状态分析 </div>
+    <el-row :gutter="1">
       <el-col :xs="10" :sm="10" :md="4" :lg="4" v-for="bar in statusChart">
-        <div class="chart-wrapper"  >
+        <div class="chart-wrapper chart-wrapper11"  >
           <bar-chart :chart-data="bar.barChartData" :date="bar.date"  />
         </div>
       </el-col>
@@ -26,7 +26,7 @@
       <el-col :xs="16" :sm="16" :lg="6">
         <div class="chart-wrapper" style="width: 100%;">
           <div style="margin: 0px 0px 5px 20px;color: #279cd5;"> 设备巡检状态 </div>
-          <el-table id="tableList" :data="dataList" border fit highlight-current-row style="width: 100%;height: 326px;overflow-y: auto;" ref="tablelist">
+            <el-table id="tableList" cell-style="background: #484bc7" header-cell-style="background: #484bc7" :data="dataList" border fit highlight-current-row style="width: 100%;height: 326px;overflow-y: auto;" ref="tablelist">
             <el-table-column
               v-loading="loading"
               align="center"
@@ -68,7 +68,7 @@ import TransactionTable from './components/TransactionTable'
 import TodoList from './components/TodoList'
 import BoxCard from './components/BoxCard'
 import {fetchEvent} from "@/api/article";
-
+import bgUrl from '@/assets/images/bg.jpg'
 export default {
   name: 'StatusAnalysis',
   components: {
@@ -325,7 +325,7 @@ export default {
 <style lang="scss" scoped>
 .dashboard-editor-container {
   padding: 32px;
-  background-color: rgb(240, 242, 245);
+  background-color:#2E3092;
   position: relative;
 
   .github-corner {
@@ -336,9 +336,12 @@ export default {
   }
 
   .chart-wrapper {
-    background: #fff;
+    background: #484bc7;
     padding: 16px 16px 0;
     margin-bottom: 32px;
+  }
+  .chart-wrapper11{
+    background: #2E3092;
   }
 }
 
