@@ -341,15 +341,15 @@ export default {
     },
     sortChange(data) {
       const { prop, order } = data
-      if (prop === 'id') {
+      if (prop === 'addr') {
         this.sortByID(order)
       }
     },
     sortByID(order) {
       if (order === 'ascending') {
-        this.listQuery.sort = '+id'
+        this.listQuery.sort = '+addr'
       } else {
-        this.listQuery.sort = '-id'
+        this.listQuery.sort = '-addr'
       }
       this.handleFilter()
     },

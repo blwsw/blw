@@ -81,8 +81,8 @@ export default {
       this.chart.setOption({
         title:{
           text: this.date || '时间段',
-          style:{
-            color:'#fff',
+          textStyle:{
+            color:'#909399',
           },
           subtext: '',
           left: 'left',
@@ -94,7 +94,11 @@ export default {
           }
         },
         legend: {
-          data:['正常','故障','报警','预警']
+          textStyle:{
+            color:'#909399',
+          },
+          data:['正常','故障','报警','预警'],
+
         },
         grid: {
           top: 28,
@@ -106,6 +110,11 @@ export default {
         xAxis: [{
           type: 'category',
           data:['正常','故障','报警','预警'],
+          axisLabel: {
+            textStyle:{
+              color:'#909399',
+            }
+          },
           axisTick: {
             alignWithLabel: true
           },

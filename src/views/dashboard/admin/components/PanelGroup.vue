@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="40" class="panel-group">
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
+      <div class="card-panel card-panel1" @click="handleSetLineChartData('newVisitis')">
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="example" class-name="card-panel-icon" />
         </div>
@@ -14,7 +14,7 @@
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('messages')">
+      <div class="card-panel  card-panel2" @click="handleSetLineChartData('messages')">
         <div class="card-panel-icon-wrapper icon-message">
           <i class="el-icon-s-tools card-panel-icon" class-name="card-panel-icon" />
         </div>
@@ -27,7 +27,7 @@
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('purchases')">
+      <div class="card-panel  card-panel3" @click="handleSetLineChartData('purchases')">
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon icon-class="dashboard" class-name="card-panel-icon" />
         </div>
@@ -40,7 +40,7 @@
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('shoppings')">
+      <div class="card-panel  card-panel4" @click="handleSetLineChartData('shoppings')">
         <div class="card-panel-icon-wrapper icon-shopping">
           <svg-icon icon-class="icon" class-name="card-panel-icon" />
         </div>
@@ -223,7 +223,7 @@ export default {
 
       .card-panel-text {
         line-height: 18px;
-        color: rgba(0, 0, 0, 0.45);
+        color: #ffffff;
         font-size: 16px;
         margin-bottom: 12px;
       }
@@ -232,6 +232,26 @@ export default {
         font-size: 20px;
       }
     }
+  }
+
+  .card-panel1{
+    background: #1bbb62;
+    color: #ffffff;
+  }
+
+  .card-panel2 {
+    background: #b1b10f;
+    color: #ffffff;
+  }
+
+  .card-panel3 {
+    background: #8a3fef;
+    color: #ffffff;
+  }
+
+  .card-panel4 {
+    background: #b12f2f;
+    color: #ffffff;
   }
 }
 

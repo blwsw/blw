@@ -95,9 +95,10 @@ export default {
 
       var countIndex =0;
      dataList.map((node)=>{
+       node.delete =1;
         //保存数据
         var query={
-          url:"history",
+          url:"nodes",
           data:node,
           methods:"post"
         };

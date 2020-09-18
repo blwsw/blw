@@ -2,11 +2,11 @@
   <div class="mixin-components-container">
 
     <el-row :gutter="15" class="panel-group">
-      <el-col :xs="8" :sm="8" :lg="4" class="card-panel-col" v-for="node in dataList">
+      <el-col :xs="8" :sm="8" :md="4" :lg="3" class="card-panel-col" v-for="node in dataList">
         <el-card class="box-card" body-style="padding:5px;" v-bind:class="{ 'bicon-people': node.ErrFlag=='F','bicon-message': node.ErrFlag=='T','bicon-outling': node.ErrFlag=='D' }">
-          <div slot="header" class="clearfix">
+          <div slot="header" class="clearfix spanaa">
             <i class="el-icon-warning-outline" />
-            <span>{{node.addr}}</span> <span> </span>
+            <span>{{node.addr}}</span>
             <span>{{node.pdcNo}}</span>
           </div>
           <div class="component-item">
@@ -38,7 +38,7 @@
     </el-row>
 
 
-    <el-row :gutter="0" class="panel-group">
+    <el-row :gutter="1" class="panel-group">
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <el-row :gutter="1" >
           <el-col :xs="12" :sm="12" :lg="12">
@@ -67,26 +67,25 @@
       </el-col>
       <el-col :xs="6" :sm="6" :lg="3" class="card-panel-col" v-for="t in totalList">
         <el-card class="box-card" body-style="padding:5px;" >
-
           <div class="component-item">
             <div class="card-panel">
-              <div class="card-panel-icon-wrapper bicon-people" v-if="t.icon =='el-icon-video-play'">
+              <div class="card-panel-icon-wrapper card-panel-icon-wrapper1 bicon-people" v-if="t.icon =='el-icon-video-play'">
                 <i class="el-icon-video-play card-panel-icon" />
               </div>
-              <div class="card-panel-icon-wrapper bicon-message" v-if="t.icon =='el-icon-warning'">
+              <div class="card-panel-icon-wrapper card-panel-icon-wrapper1 bicon-message" v-if="t.icon =='el-icon-warning'">
                 <i class="el-icon-warning card-panel-icon" />
               </div>
-              <div class="card-panel-icon-wrapper bicon-money" v-if="t.icon =='el-icon-message-solid'">
+              <div class="card-panel-icon-wrapper card-panel-icon-wrapper1 bicon-money" v-if="t.icon =='el-icon-message-solid'">
                 <i class="el-icon-message-solid card-panel-icon" />
               </div>
-              <div class="card-panel-icon-wrapper bicon-shopping" v-if="t.icon =='el-icon-sunrise-1'">
+              <div class="card-panel-icon-wrapper card-panel-icon-wrapper1 bicon-shopping" v-if="t.icon =='el-icon-sunrise-1'">
                 <i class="el-icon-sunrise-1 card-panel-icon" />
               </div>
-              <div class="card-panel-icon-wrapper bicon-outling" v-if="t.icon =='el-icon-circle-close'">
+              <div class="card-panel-icon-wrapper card-panel-icon-wrapper1 bicon-outling" v-if="t.icon =='el-icon-circle-close'">
               <i class="el-icon-circle-close card-panel-icon" />
             </div>
 
-              <div class="card-panel-description" style="vertical-align: center;">
+              <div class="card-panel-description card-panel-description1" style="vertical-align: center;">
                 <div class="card-panel-text">
                   {{t.count}}台&nbsp;
                 </div>
@@ -306,6 +305,9 @@ export default {
       transition: all 0.38s ease-out;
       border-radius: 6px;
     }
+    .card-panel-icon-wrapper1 {
+      margin: 17px 0 15px 0;
+    }
 
     .card-panel-icon {
       float: left;
@@ -328,9 +330,21 @@ export default {
         font-size: 20px;
       }
     }
+    .card-panel-description1 {
+      margin: 15px 0 15px 0;
+      padding: 11px 0 11px 0;
+    }
+
   }
 }
 
+.spanaa{
+  width: 100%;
+  display: inline-block;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
 @media (max-width:550px) {
   .card-panel-description {
     display: none;

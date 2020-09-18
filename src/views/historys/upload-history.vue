@@ -17,10 +17,10 @@ const calendarTypeOptions = [
   { key: '故障标志位', display_name: 'ErrFlag' },
   { key: '雷击故障代码', display_name: 'ErrThunder' },
   { key: '温度故障代码', display_name: 'ErrTemp' },
-  { key: '温度劣化故障代码', display_name: 'ErrTempLeihua' },
-  { key: '漏电劣化1故障代码', display_name: 'ErrLCLeihua1' },
-  { key: '漏电劣化2故障代码', display_name: 'ErrLCLeihua2' },
-  { key: '漏电劣化3故障代码', display_name: 'ErrLCLeihua3' },
+  { key: '温度劣化故障代码', display_name: 'ErrLeihua' },
+  { key: '漏电劣化1故障代码', display_name: 'ErrLC1' },
+  { key: '漏电劣化2故障代码', display_name: 'ErrLC2' },
+  { key: '漏电劣化3故障代码', display_name: 'ErrLC3' },
   { key: '端口', display_name: 'serialserver_port' },
   { key: '雷击电流报警设定值', display_name: 'TCurrentAlarm' },
   { key: '温度报警设定值', display_name: 'TAlarm' },
@@ -103,7 +103,7 @@ export default {
          fetchEvent(query).then(response => {
           countIndex++;
           if(countIndex == dataList.length){
-            this.$router.push({ name: 'history', params: { id:"" }}) //
+            this.$router.push({ name: 'historys', params: { id:"" }}) //
           }
         })
       });

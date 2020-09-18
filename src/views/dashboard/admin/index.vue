@@ -27,7 +27,7 @@
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper" style="width: 100%;">
           <div style="margin: 0px 0px 5px 20px;color: #279cd5;"> 设备巡检状态 </div>
-          <el-table id="tableList" :data="reals" border fit highlight-current-row style="width: 100%;height: 326px;overflow-y: auto;" ref="tablelist">
+          <el-table id="tableList" height="278px" :data="reals" border fit highlight-current-row style="width: 100%;" ref="tablelist">
             <el-table-column
               v-loading="loading"
               align="center"

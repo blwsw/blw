@@ -3,7 +3,7 @@
     <div class="chart-wrapper">
     <div style="margin: 0px 0px 5px 20px;color: #279cd5;"> 设备状态分析 </div>
     <el-row :gutter="0">
-      <el-col :xs="10" :sm="10" :md="4" :lg="4" v-for="bar in statusChart">
+      <el-col :xs="10" :sm="10" :md="4" :lg="3" v-for="bar in statusChart">
         <div class="chart-wrapper"  >
           <bar-chart :chart-data="bar.barChartData" :date="bar.date"  />
         </div>
@@ -26,7 +26,7 @@
       <el-col :xs="16" :sm="16" :lg="6">
         <div class="chart-wrapper" style="width: 100%;">
           <div style="margin: 0px 0px 5px 20px;color: #279cd5;"> 设备巡检状态 </div>
-          <el-table id="tableList" :data="dataList" border fit highlight-current-row style="width: 100%;height: 326px;overflow-y: auto;" ref="tablelist">
+          <el-table id="tableList" height="327px" :data="dataList" border fit highlight-current-row style="width: 100%;" ref="tablelist">
             <el-table-column
               v-loading="loading"
               align="center"
@@ -170,7 +170,7 @@ export default {
   created() {
     this.expectedData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     var day = null;
-    for(let i=4;i>=0;i--){
+    for(let i=0;i<=5;i++){
       day = this.getWeek(-i);
       this.dataweek.push(day);
       this.statusChart[i].date=day;
