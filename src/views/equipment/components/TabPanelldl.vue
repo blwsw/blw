@@ -8,7 +8,7 @@
   <el-button :loading="downloadLoading" style="margin:5px;" type="primary" icon="el-icon-document" @click="handlePrint" >
     打印
   </el-button></div>
-  <el-table id="tableList" :data="list"  border fit highlight-current-row style="width: 100%;height:600px;overflow-y: auto;" ref="tablelist">
+  <el-table id="tableList" height="600px" :data="list"  border fit highlight-current-row style="width: 100%;" ref="tablelist">
     <el-table-column
       v-loading="loading"
       align="center"
