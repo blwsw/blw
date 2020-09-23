@@ -23,12 +23,28 @@ export default {
     height: {
       type: String,
       default: '300px'
+    },
+    chartData: {
+      type: Array,
+      required: true
+    },
+    weeks:{
+      type:Array,
+      defaults:["星期一","星期二"]
     }
   },
   data() {
     return {
       chart: null
     }
+  },
+  watch: {
+    chartData: {
+      deep: true,
+      handler(val) {
+        this.setOptions(val)
+      }
+    },
   },
   mounted() {
     this.$nextTick(() => {
@@ -45,7 +61,9 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-
+      this.setOptions(this.chartData)
+    },
+    setOptions(chartData) {
       this.chart.setOption({
         tooltip: {
           trigger: 'axis',
@@ -62,7 +80,7 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: this.weeks,//['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
           axisTick: {
             alignWithLabel: true
           }
@@ -83,25 +101,25 @@ export default {
           splitArea : {show : false}//保留网格区域
         }],
         series: [{
-          name: 'pageA',
+          name: '正常',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
-          data: [79, 52, 200, 334, 390, 330, 220],
+          data: chartData[0],//[79, 52, 200, 334, 390, 330, 220],
           animationDuration
         }, {
-          name: 'pageB',
+          name: '预警',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
-          data: [80, 52, 200, 334, 390, 330, 220],
+          data:chartData[1],//[80, 52, 200, 334, 390, 330, 220],
           animationDuration
         }, {
-          name: 'pageC',
+          name: '报警',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
-          data: [30, 52, 200, 334, 390, 330, 220],
+          data: chartData[2],//[30, 52, 200, 334, 390, 330, 220],
           animationDuration
         }]
       })

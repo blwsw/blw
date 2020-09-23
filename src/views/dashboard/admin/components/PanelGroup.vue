@@ -199,7 +199,7 @@ export default {
     }
 
     .icon-shopping {
-      color: #f10606
+      color: #edf1f5
     }
 
     .card-panel-icon-wrapper {

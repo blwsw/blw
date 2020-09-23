@@ -21,7 +21,7 @@
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <bar-chart />
+          <bar-chart :chart-data="barChart" :weeks="weeks" />
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
@@ -101,6 +101,11 @@ export default {
         { value: 0, name: '故障',itemStyle:{color:"#f29e3c"} },
         { value: 0, name: '报警' ,itemStyle:{color:"#f67287"}},
         { value: 0, name: '预警' }
+      ],
+      barChart:[
+        [0, 0, 0,0, 0, 0, 0],
+        [0, 0, 0,0, 0, 0, 0],
+        [0, 0, 0,0, 0, 0, 0]
       ],
       azcount:0,
       reals:[],
@@ -194,6 +199,7 @@ export default {
           //故障标志位，T有故障，F无故障，D离线
           if(item.ErrFlag == 'T'){
             this.expectedData[i] ++;
+            this.barChart[0][i]++;
           }
 
           //01预警
@@ -201,6 +207,7 @@ export default {
             item.ErrTemp=='01' || item.ErrLC3=='01'
           ){
             this.expectedData[i] ++;
+            this.barChart[1][i]++;
           }
 
           //10预警
@@ -208,6 +215,7 @@ export default {
             item.ErrTemp=='10' || item.ErrLC3=='10'
           ){
             this.expectedData[i] ++;
+            this.barChart[2][i]++;
           }
 
         }

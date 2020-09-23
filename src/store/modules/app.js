@@ -12,7 +12,8 @@ const state = {
   device: 'desktop',
   language: getLanguage(),
   size: Cookies.get('size') || 'medium',
-  reals:[]
+  reals:[],
+  nodes:[]
 }
 
 const mutations = {
@@ -44,6 +45,10 @@ const mutations = {
   SET_REALS: (state, reals) => {
     state.reals = reals
     Cookies.set('reals', reals)
+  },
+  SET_NODES: (state, nodes) => {
+    state.nodes = nodes
+    Cookies.set('nodes', nodes)
   }
 }
 
@@ -84,6 +89,9 @@ const actions = {
   },
   setReals({ commit }, reals) {
     commit('SET_REALS', reals)
+  },
+  setNodes({ commit }, nodes) {
+    commit('SET_NODES', nodes)
   },
 }
 
