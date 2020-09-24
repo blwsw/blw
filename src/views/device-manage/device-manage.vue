@@ -35,6 +35,7 @@
       :data="list"
       border
       fit
+      header-cell-style="background-color: #f5f7fa;color: #909399;font-weight: bold;border-bottom: 1px solid #EBEEF5;"
       highlight-current-row
       style="width: 100%;"
       ref="multipleTable"
@@ -298,6 +299,20 @@ export default {
       downloadList:[]
     }
   },
+  computed: { //          监听词条
+    getNodeData(){
+      return this.$store.state.app.nodes;
+    }
+  },
+  watch: {
+    getNodeData: {
+      handler(newValue,oldValue){ //当词条改变时执行事件
+        // console.log('new',newValue)
+        // console.log('old',oldValue)
+        this.appendData(newValue);
+      }
+    }
+  },
   created() {
     this.getList()
   },
@@ -315,6 +330,27 @@ export default {
         this.list = response.responseBody
         this.total = response.page.page_total
         this.listLoading = false
+      })
+    },
+    appendData(newValue){
+      var nnode = newValue;
+      this.list.map((item, i) => {
+        if (item.addr == nnode.addr){
+          //this.relas.splice(i,1)
+          item.BOut = nnode.BOut;
+          item.LCurrentMax = nnode.LCurrentMax;
+          item.Switch1 = nnode.Switch1;
+          item.Switch2 = nnode.Switch2;
+          item.Switch3 = nnode.Switch3;
+          item.Switch4 = nnode.Switch4;
+          item.TAlarm = nnode.TAlarm;
+          item.TCurrent1 = nnode.TCurrent1;
+          item.TCurrent2 = nnode.TCurrent2;
+          item.TCurrent3 = nnode.TCurrent3;
+          item.TCurrentAlarm = nnode.TCurrentAlarm;
+          item.TRiseMax = nnode.TRiseMax;
+        }
+        return item;
       })
     },
     handleFilter() {

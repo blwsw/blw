@@ -21,7 +21,7 @@
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
-          <bar-chart :chart-data="barChart" :weeks="weeks" />
+          <bar-chart :chart-data="barChart222" :weeks="weeks" />
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :lg="8">
@@ -97,16 +97,20 @@ export default {
       expectedData:[0, 0, 0, 0, 0, 0, 0],
       actualData:[0, 0, 0, 0, 0, 0, 0],
       pieChartData:[
-        { value: 0, name: '正常' ,itemStyle:{color:"#65d186"}},
-        { value: 0, name: '故障',itemStyle:{color:"#f29e3c"} },
-        { value: 0, name: '报警' ,itemStyle:{color:"#f67287"}},
-        { value: 0, name: '预警' }
+         { value: 0, name: '正常' ,itemStyle:{color:"#65d186"}},
+        // { value: 0, name: '故障',itemStyle:{color:"#f29e3c"} },
+        // { value: 0, name: '报警' ,itemStyle:{color:"#f67287"}},
+       // { value: 0, name: '正常' ,itemStyle:{color:"#3567EF"}},
+        { value: 0, name: '故障',itemStyle:{color:"#e0d405"} },
+        { value: 0, name: '报警' ,itemStyle:{color:"#E93F33"}},
+        { value: 0, name: '预警' ,itemStyle:{color:"#F19433"}}
       ],
       barChart:[
         [0, 0, 0,0, 0, 0, 0],
         [0, 0, 0,0, 0, 0, 0],
         [0, 0, 0,0, 0, 0, 0]
       ],
+      barChart222:[],
       azcount:0,
       reals:[],
       dataweek:[],
@@ -222,6 +226,21 @@ export default {
       }
       this.lineChartData.actualData =this.actualData;
       this.lineChartData.expectedData =this.expectedData;
+      this.barChart222 = this.barChart;
+    },
+    getStateColor(code){
+      //{code:"00",value:"正常"},
+      //{code:"01",value:"预警"},
+      //{code:"10",value:"报警"},
+      if(code == "00"){
+        return "#65d186";
+      }
+      if(code == "01"){
+        return "#f29e3c";
+      }
+      if(code == "10"){
+        return "#E93F33";
+      }
     },
     appendData(data){//近一周状况
       var context = this;
@@ -230,20 +249,17 @@ export default {
         item.ErrLeihuaStatusName = this.getStatusName(item.ErrLeihua);
         let daye = context.getDayByTime(item.In_Time);
         context.getTTimeCount(item);
-        item.colorss = '#65d186';
+        item.colorss = this.getStateColor(item.ErrLeihua);
         //totalList计算total
         //故障标志位，T有故障，F无故障，D离线
         if(item.ErrFlag == 'F'){
           context.pieChartData[0].value ++;
-          item.colorss = '#65d186';
         }
         if(item.ErrFlag == 'T'){
           context.pieChartData[1].value ++;
-          item.colorss = '#f29e3c';
         }
         if(item.ErrFlag == 'D'){
           // context.totalList[4].count ++;
-          item.colorss = '#f67287';
         }else{
           // context.zxcount++;
         }

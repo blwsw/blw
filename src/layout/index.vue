@@ -109,9 +109,14 @@ export default {
                 return true
               }
             })
+            this.relas.unshift(newData)
           }
-          this.relas.unshift(newData)
+
           store.dispatch('app/setReals',this.relas)
+        }else{
+          var newData = redata.data;
+          //console.log(newData)
+          store.dispatch('app/setNodes',newData)
         }
 
       }

@@ -40,6 +40,9 @@
       :key="tableKey"
       v-loading="listLoading"
       :data="list"
+
+      header-cell-style="background-color: #f5f7fa;color: #909399;font-weight: bold;border-bottom: 1px solid #EBEEF5;"
+
       border
       fit
       highlight-current-row
@@ -74,7 +77,7 @@
 
 
 
-      <el-table-column label="Actions" align="center" min-width="230" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" min-width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" v-permission="['admin1','blw']" size="mini" @click="handleUpdate(row)">
             修改

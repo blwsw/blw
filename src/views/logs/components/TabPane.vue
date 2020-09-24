@@ -26,7 +26,7 @@
   </div>
 
 
-  <el-table :data="list" border fit highlight-current-row style="width: 100%;">
+  <el-table :data="list"  header-cell-style="background-color: #f5f7fa;color: #909399;font-weight: bold;border-bottom: 1px solid #EBEEF5;" border fit highlight-current-row style="width: 100%;">
     <el-table-column
       v-loading="loading"
       align="center"

@@ -8,7 +8,7 @@
   <el-button :loading="downloadLoading" style="margin:5px;" type="primary" icon="el-icon-document" @click="handlePrint" >
     打印
   </el-button></div>
-  <el-table id="tableList" height="600px" :data="list" border fit highlight-current-row style="width: 100%;" ref="tablelist">
+  <el-table id="tableList" height="600px"  header-cell-style="background-color: #f5f7fa;color: #909399;font-weight: bold;border-bottom: 1px solid #EBEEF5;" :data="list" border fit highlight-current-row style="width: 100%;" ref="tablelist">
     <el-table-column
       v-loading="loading"
       align="center"
@@ -213,6 +213,21 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+  .el-table th > .cell {
+    position: relative;
+    word-wrap: normal;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  .el-table th.is-leaf, .el-table td {
+    border-bottom: 1px solid #EBEEF5;
+  }
+  .elhed {
+    background-color: #f5f7fa;
+  }
   </style>
 

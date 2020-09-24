@@ -155,10 +155,9 @@ export default {
               color: function(params) {
                 var colorList = [
                   "#65d186",
-                  "#f29e3c",
-                  "#f67287",
-                  "#f29e3c",
-                  "#f67287"
+                  "#e0d405",
+                  "#E93F33",
+                  "#F19433",
                 ]; //每根柱子的颜色
                 return colorList[params.dataIndex];
               }

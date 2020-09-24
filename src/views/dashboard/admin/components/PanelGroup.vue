@@ -174,32 +174,32 @@ export default {
       }
 
       .icon-message {
-        background: #eabb10;
+        background: #a412cb;
       }
 
       .icon-money {
-        background: #f4516c;
+        background: #22c2b5;
       }
 
       .icon-shopping {
-        background: #ee0d0d
+        background: #b60df3
       }
     }
 
     .icon-people {
-      color: #40c9c6;
+      color: #f0f5f3;
     }
 
     .icon-message {
-      color: #f7d736;
+      color: #f0f5f3;
     }
 
     .icon-money {
-      color: #f4516c;
+      color: #f0f5f3;
     }
 
     .icon-shopping {
-      color: #edf1f5
+      color: #f0f5f3
     }
 
     .card-panel-icon-wrapper {
@@ -235,22 +235,22 @@ export default {
   }
 
   .card-panel1{
-    background: #1bbb62;
+    background: #65d186;
     color: #ffffff;
   }
 
   .card-panel2 {
-    background: #b1b10f;
+    background: #e0d405;
     color: #ffffff;
   }
 
   .card-panel3 {
-    background: #8a3fef;
+    background: #F19433;
     color: #ffffff;
   }
 
   .card-panel4 {
-    background: #b12f2f;
+    background: #E93F33;
     color: #ffffff;
   }
 }

@@ -92,9 +92,12 @@ export default {
       expectedData:[],
       pieChartData:[
         { value: 0, name: '正常' ,itemStyle:{color:"#65d186"}},
-        { value: 0, name: '故障',itemStyle:{color:"#f29e3c"} },
-        { value: 0, name: '报警' ,itemStyle:{color:"#f67287"}},
-        { value: 0, name: '预警' }
+        // { value: 0, name: '故障',itemStyle:{color:"#f29e3c"} },
+        // { value: 0, name: '报警' ,itemStyle:{color:"#f67287"}},
+        // { value: 0, name: '预警' ,itemStyle:{color:"#F19433"}}
+        { value: 0, name: '故障',itemStyle:{color:"#e0d405"} },
+        { value: 0, name: '报警' ,itemStyle:{color:"#E93F33"}},
+        { value: 0, name: '预警' ,itemStyle:{color:"#F19433"}}
         ],
       barChartData:[
         { value: 0, name: '正常'},
@@ -180,6 +183,20 @@ export default {
     this.getList();
   },
   methods: {
+    getStateColor(code){
+      //{code:"00",value:"正常"},
+      //{code:"01",value:"预警"},
+      //{code:"10",value:"报警"},
+      if(code == "00"){
+        return "#65d186";
+      }
+      if(code == "01"){
+        return "#f29e3c";
+      }
+      if(code == "10"){
+        return "#f67287";
+      }
+    },
     getList() {
       this.loading = true
       var obj = {
@@ -193,20 +210,18 @@ export default {
         var context = this;
         this.dataList = response.responseBody.map((e)=>{
            e.ErrLeihuaStatusName = this.getStatusName(e.ErrLeihua);
-           e.colorss = '#65d186';
+
+           e.colorss = this.getStateColor(e.ErrLeihua);
           //totalList计算total
           //故障标志位，T有故障，F无故障，D离线
           if(e.ErrFlag == 'F'){
             context.pieChartData[0].value ++;
-            e.colorss = '#65d186';
           }
           if(e.ErrFlag == 'T'){
             context.pieChartData[1].value ++;
-            e.colorss = '#f29e3c';
           }
           if(e.ErrFlag == 'D'){
             context.totalList[4].count ++;
-            e.colorss = '#f67287';
           }else{
             context.zxcount++;
           }

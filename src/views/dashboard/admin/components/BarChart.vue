@@ -106,21 +106,42 @@ export default {
           stack: 'vistors',
           barWidth: '60%',
           data: chartData[0],//[79, 52, 200, 334, 390, 330, 220],
-          animationDuration
+          animationDuration,
+          itemStyle: {
+            //通常情况下：
+            normal: {
+              //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+              color: "#65d186",
+            },
+          }
         }, {
           name: '预警',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
           data:chartData[1],//[80, 52, 200, 334, 390, 330, 220],
-          animationDuration
+          animationDuration,
+          itemStyle: {
+            //通常情况下：
+            normal: {
+              //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+              color:"#F19433",
+            },
+          }
         }, {
           name: '报警',
           type: 'bar',
           stack: 'vistors',
           barWidth: '60%',
           data: chartData[2],//[30, 52, 200, 334, 390, 330, 220],
-          animationDuration
+          animationDuration,
+          itemStyle: {
+            //通常情况下：
+            normal: {
+              //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+              color: "#E93F33",
+            },
+          }
         }]
       })
     }

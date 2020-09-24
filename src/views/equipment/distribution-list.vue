@@ -229,19 +229,19 @@ export default {
   }
 
   .bicon-people {
-    background: #40c9c6;
+    background: #65d186;
   }
 
   .bicon-message {
-    background: #eabb10;
+    background: #e0d405;
   }
 
   .bicon-money {
-    background: #f4516c;
+    background: #F19433;
   }
 
   .bicon-shopping {
-    background: #ee0d0d
+    background: #E93F33
   }
   .bicon-outling {
     background: #aaa4a4
@@ -263,19 +263,19 @@ export default {
       }
 
       .icon-people {
-        background: #40c9c6;
+        background: #65d186;
       }
 
       .icon-message {
-        background: #eabb10;
+        background: #e0d405;
       }
 
       .icon-money {
-        background: #f4516c;
+        background: #F19433;
       }
 
       .icon-shopping {
-        background: #ee0d0d
+        background: #E93F33
       }
       .icon-outling {
         background: #aaa4a4
