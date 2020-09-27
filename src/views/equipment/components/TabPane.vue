@@ -56,7 +56,7 @@
       </el-table-column>
     <el-table-column v-if="'L5' == type" min-width="50px" label="劣化度" show-overflow-tooltip >
       <template slot-scope="{row}">
-        <span>{{ row.Deterior}}</span>
+        <span>{{ row.Deterior}}%</span>
       </template>
     </el-table-column>
 
