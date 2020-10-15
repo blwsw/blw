@@ -90,6 +90,7 @@ export default {
         actualData:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       },
       expectedData:[],
+      actualData:[],
       pieChartData:[
         { value: 0, name: '正常' ,itemStyle:{color:"#65d186"}},
         // { value: 0, name: '故障',itemStyle:{color:"#f29e3c"} },
@@ -172,6 +173,7 @@ export default {
   },
   created() {
     this.expectedData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    this.actualData= [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     var day = null;
     for(let i=0;i<=5;i++){
       day = this.getWeek(-i);
@@ -255,6 +257,9 @@ export default {
          if(i== fdate.getMonth()){
            this.expectedData[i]+=item.TTime;
          }
+         // if(i == ){
+         //
+         // }
       }
       this.lineChartData.expectedData =this.expectedData;
     },

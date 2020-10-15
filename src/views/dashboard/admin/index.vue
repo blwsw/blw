@@ -158,6 +158,29 @@ export default {
 
   },
   methods: {
+    dataInit(){
+      this.pieChartData=[
+        { value: 0, name: '正常' ,itemStyle:{color:"#65d186"}},
+        { value: 0, name: '故障',itemStyle:{color:"#e0d405"} },
+        { value: 0, name: '报警' ,itemStyle:{color:"#E93F33"}},
+        { value: 0, name: '预警' ,itemStyle:{color:"#F19433"}}
+      ];
+      this.lineChartData.expectedData =this.expectedData;
+      this.barChart222 = this.barChart;
+
+      this.lineChartData ={
+        expectedData:[0, 0, 0, 0, 0, 0, 0],
+          actualData:[0, 0, 0, 0, 0, 0, 0]
+      },
+        this.expectedData=[0, 0, 0, 0, 0, 0, 0],
+        this.actualData=[0, 0, 0, 0, 0, 0, 0],
+
+        this.barChart = [
+        [0, 0, 0,0, 0, 0, 0],
+        [0, 0, 0,0, 0, 0, 0],
+        [0, 0, 0,0, 0, 0, 0]
+      ], this.barChart222=[];
+    },
     async getReals(){
       this.relas = await store.dispatch('app/getReals',{reload:true} );
       await store.dispatch('app/setReals', this.relas);
@@ -243,6 +266,7 @@ export default {
       }
     },
     appendData(data){//近一周状况
+      this.dataInit();
       var context = this;
       context.azcount= this.reals.length;
       this.reals = this.reals.map((item)=>{

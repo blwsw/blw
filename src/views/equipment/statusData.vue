@@ -11,6 +11,7 @@
           <TabPanelldl v-if="'L4'==item.key" :type="item.key" @getDataList="getList" @create="showCreatedTimes" :dataList="dataList" />
 
           <TabPane v-if="'L5'==item.key" :type="item.key" @getDataList="getList" @create="showCreatedTimes" :dataList="dataList" />
+          <TabPane v-if="'L6'==item.key" :type="item.key" @getDataList="getList" @create="showCreatedTimes" :dataList="dataList" />
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
@@ -34,7 +35,8 @@ export default {
         { label: '雷击电流', key: 'L2' },
         { label: '实时温度', key: 'L3' },
         { label: '泄露电流', key: 'L4' },
-        { label: '劣化状态', key: 'L5' }
+        { label: '劣化状态', key: 'L5' },
+        { label: '状态反馈', key: 'L6' }
       ],
       activeName: 'L1',
       createdTimes: 0,

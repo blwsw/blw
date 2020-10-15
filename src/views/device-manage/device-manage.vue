@@ -147,10 +147,10 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             修改
           </el-button>
-          <el-button v-if="row.delete!='1'" size="mini" type="success" @click="handleModifyStatus(row,'1')">
+          <el-button v-if="row.delete!='0'" size="mini" type="success" @click="handleModifyStatus(row,'1')">
             启用
           </el-button>
-          <el-button v-if="row.delete!='0'" size="mini" @click="handleModifyStatus(row,'0')">
+          <el-button v-if="row.delete!='1'" size="mini" @click="handleModifyStatus(row,'0')">
             禁用
           </el-button>
           <!--
@@ -219,8 +219,8 @@ import Pagination from '@/components/Pagination/index'
 import {deleteRole} from "@/api/role"; // secondary package based on el-pagination
 
 const calendarTypeOptions = [
-  { key: '1', display_name: '启用' },
-  { key: '0', display_name: '禁用' }
+  { key: '0', display_name: '启用' },
+  { key: '1', display_name: '禁用' }
 ]
 //E:开启 D:关闭
 const qyjyOptions = [

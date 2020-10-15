@@ -59,8 +59,26 @@
         <span>{{ row.Deterior}}%</span>
       </template>
     </el-table-column>
-
-
+    <el-table-column v-if="'L6' == type" min-width="50px" label="脱离器1" show-overflow-tooltip >
+      <template slot-scope="{row}">
+        <span>{{ row.Switch1 |switchFilter}}</span>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="'L6' == type" min-width="50px" label="脱离器2" show-overflow-tooltip >
+      <template slot-scope="{row}">
+        <span>{{ row.Switch2 |switchFilter}}</span>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="'L6' == type" min-width="50px" label="脱离器3" show-overflow-tooltip >
+      <template slot-scope="{row}">
+        <span>{{ row.Switch3 |switchFilter}}</span>
+      </template>
+    </el-table-column>
+    <el-table-column v-if="'L6' == type" min-width="50px" label="脱离器4" show-overflow-tooltip >
+      <template slot-scope="{row}">
+        <span>{{ row.Switch4 |switchFilter}}</span>
+      </template>
+    </el-table-column>
     <el-table-column width="110px" align="center" label="安装位置">
       <template slot-scope="scope">
         <span>{{ scope.row.InstallPos }}</span>
@@ -87,6 +105,13 @@ export default {
         '00': '正常',
         '01': '预警',
         '10': '报警'
+      }
+      return statusMap[status]
+    },
+    switchFilter(status) {//开关量1，0关，1开  = 开关量（1：故障 0：正常） 脱离器
+      const statusMap = {
+        '1': '故障',
+        '0': '正常'
       }
       return statusMap[status]
     }
