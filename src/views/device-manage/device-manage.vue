@@ -562,7 +562,7 @@ export default {
           fetchEvent(query).then(response => {
             this.$notify({
               title: '成功',
-              message: '初始化下发成功',
+              message: '初始化成功',
               type: 'success',
               duration: 2000
             })
@@ -601,7 +601,7 @@ export default {
       fetchEvent(query).then(response => {
         this.$notify({
           title: '成功',
-          message: '初始化下发成功',
+          message: '清除通知成功',
           type: 'success',
           duration: 2000
         })
