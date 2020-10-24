@@ -69,7 +69,10 @@ export default {
         title: {
           text: '系统状态图',
           subtext: '总台数'+this.azcount+"台",
-          left: 'left'
+          left: 'left',
+          textStyle: {
+            fontSize: 16,
+          },
         },
         tooltip: {
           trigger: 'item',

@@ -76,7 +76,10 @@ export default {
         title: {
           text: '近7天状态折线图',
           subtext: '',
-          left: 'left'
+          left: 'left',
+          textStyle: {
+            fontSize: 16,
+          },
         },
         xAxis: {
           data: this.weeks,//['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],

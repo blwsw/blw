@@ -122,21 +122,21 @@ export default {
           //故障标志位，T有故障，F无故障，D离线
           if(item.ErrFlag == 'F'){
             context.zccount ++;
-          }
-          if(item.ErrFlag == 'T'){
+          }else if(item.ErrFlag == 'T'){
+              //01预警
+              if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
+                item.ErrTemp=='01' || item.ErrLC3=='01'
+              ){
+                context.yjcount++;
+              }
+              //10预警
+              if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
+                item.ErrTemp=='10' || item.ErrLC3=='10'
+              ){
+                context.bjcount ++;
+              }
+          }else if(item.ErrFlag == 'D'){
             context.gzcount ++;
-          }
-          //01预警
-          if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
-            item.ErrTemp=='01' || item.ErrLC3=='01'
-          ){
-            context.yjcount++;
-          }
-          //10预警
-          if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
-            item.ErrTemp=='10' || item.ErrLC3=='10'
-          ){
-            context.bjcount ++;
           }
       });
     }

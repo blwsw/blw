@@ -104,12 +104,14 @@ export default {
           }else{
             this.relas.some((item, i) => {
               if (item.addr == newData.addr){
-                this.relas.splice(i,1)
+                newData["pdcNo"]=item.pdcNo;
+                newData["InstallPos"]=item.InstallPos;
+                this.relas.splice(i,1,newData);
                 // 在数组的some方法中，如果return true，就会立即终止这个数组的后续循环,所以相比较foreach，如果想要终止循环，那么建议使用some
                 return true
               }
             })
-            this.relas.unshift(newData)
+            //this.relas.unshift(newData)
           }
 
           store.dispatch('app/setReals',this.relas)

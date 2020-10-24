@@ -2,8 +2,8 @@
   <div class="mixin-components-container">
 
     <el-row :gutter="15" class="panel-group">
-      <el-col :xs="8" :sm="8" :md="4" :lg="3" class="card-panel-col" v-for="node in dataList">
-        <el-card class="box-card" body-style="padding:5px;" v-bind:class="{ 'bicon-people': node.ErrFlag=='F','bicon-message': node.ErrFlag=='T','bicon-outling': node.ErrFlag=='D' }">
+      <el-col :xs="8" :sm="8" :md="4" :lg="3" class="card-panel-col" v-for="node in pageData">
+        <el-card class="box-card" body-style="padding:5px;" v-bind:class="{ 'bicon-people': node.ErrFlag=='F','bicon-message': node.ErrFlag=='D' ,'bicon-outling': node.YJ=='01' }">
           <div slot="header" class="clearfix spanaa">
             <i class="el-icon-warning-outline" />
             <span>{{node.addr}}</span>
@@ -14,10 +14,10 @@
               <div class="card-panel-icon-wrapper icon-people" v-if="node.ErrFlag =='F'">
                 <i class="el-icon-video-play card-panel-icon" />
               </div>
-              <div class="card-panel-icon-wrapper icon-message" v-if="node.ErrFlag =='T'">
+              <div class="card-panel-icon-wrapper icon-message" v-if="node.ErrFlag =='D'">
                 <i class="el-icon-warning card-panel-icon" />
               </div>
-              <div class="card-panel-icon-wrapper icon-outling" v-if="node.ErrFlag =='D'">
+              <div class="card-panel-icon-wrapper icon-outling" v-if="node.YJ =='01'">
                 <i class="el-icon-circle-close card-panel-icon" />
               </div>
               <div class="card-panel-description">
@@ -66,8 +66,8 @@
         </el-row>
       </el-col>
       <el-col :xs="6" :sm="6" :lg="3" class="card-panel-col" v-for="t in totalList">
-        <el-card class="box-card" body-style="padding:5px;" >
-          <div class="component-item">
+        <el-card class="box-card" body-style="padding:5px;"  >
+          <div class="component-item" @click="handleSetNewData(t.code,t.YJ)">
             <div class="card-panel">
               <div class="card-panel-icon-wrapper card-panel-icon-wrapper1 bicon-people" v-if="t.icon =='el-icon-video-play'">
                 <i class="el-icon-video-play card-panel-icon" />
@@ -99,7 +99,7 @@
         </el-card>
       </el-col>
     </el-row>
-
+    <pagination v-show="total>0" :total="total" :page.sync="currentPage" :limit.sync="pageSize" @pagination="getSubList" />
   </div>
 </template>
 
@@ -110,13 +110,15 @@ import Mallki from '@/components/TextHoverEffect/Mallki'
 import DropdownMenu from '@/components/Share/DropdownMenu'
 import waves from '@/directive/waves/index.js' // 水波纹指令
 import {fetchEvent} from "@/api/article";
+import Pagination from "@/components/Pagination/index";
 export default {
   name: 'DistributionList',
   components: {
     PanThumb,
     MdInput,
     Mallki,
-    DropdownMenu
+    DropdownMenu,
+    Pagination
   },
   directives: {
     waves
@@ -132,14 +134,16 @@ export default {
     return {
       loading:false,
       dataList: [],
+      newData:[],
+      pageData:[],
       zxcount:0,
       azcount:0,
       totalList: [
-        {count:0,lable:"正常台数",icon:"el-icon-video-play"},
-        {count:0,lable:"故障台数",icon:"el-icon-warning"},
-        {count:0,lable:"预警台数",icon:"el-icon-message-solid"},
-        {count:0,lable:"报警台数",icon:"el-icon-sunrise-1"},
-        {count:0,lable:"离线台数",icon:"el-icon-circle-close"},
+        {count:0,lable:"正常台数",icon:"el-icon-video-play",code:"F"},
+        {count:0,lable:"故障台数",icon:"el-icon-warning",code:"D"},
+        {count:0,lable:"预警台数",icon:"el-icon-message-solid",code:"T",YJ:"01"},
+        {count:0,lable:"报警台数",icon:"el-icon-sunrise-1",code:"T",YJ:"10"},
+        //{count:0,lable:"离线台数",icon:"el-icon-circle-close"},
       ],
       //00正常01预警10报警
       status: [
@@ -147,7 +151,10 @@ export default {
         {code:"00",value:"正常"},
         {code:"01",value:"预警"},
         {code:"10",value:"报警"},
-      ]
+      ],
+      total:0,
+      currentPage:1,
+      pageSize:30,
     }
   },
   created() {
@@ -155,6 +162,13 @@ export default {
 
   },
   methods:{
+    getSubList() {
+      console.log(this.currentPage);
+      console.log(this.pageSize);
+      var startIndex = (this.currentPage -1)*this.pageSize;
+      var endIndex = this.currentPage *this.pageSize;
+      this.pageData = this.newData.slice(startIndex,endIndex);
+    },
     getList() {
       this.loading = true
       // this.$emit('create') // for test
@@ -173,34 +187,77 @@ export default {
           if(e.ErrFlag == 'F'){
             this.totalList[0].count ++;
           }
-          if(e.ErrFlag == 'T'){
-            this.totalList[1].count ++;
-          }
           if(e.ErrFlag == 'D'){
-            this.totalList[4].count ++;
+            this.totalList[1].count ++;
           }else{
             this.zxcount++;
           }
+          if(e.ErrFlag == 'T'){
+            //01预警
+            if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
+              item.ErrTemp=='01' || item.ErrLC3=='01'
+            ){
+              this.totalList[2].count ++;
+              e.YJ="01";
+            }
+            //10报警
+            if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
+              item.ErrTemp=='10' || item.ErrLC3=='10'
+            ){
+              this.totalList[3].count ++;
+              e.YJ="10";
+            }
+          }
           this.azcount++;
+          e.ErrLeihuaStatusName = this.getStatusName(e.ErrFlag,e.YJ);
           return e;
         });
+        this.newData = this.dataList;
         this.loading = false
+        this.total = this.newData.length;
+        this.getSubList();
       })
     },
-    getStatusName(incode){
-      if(!incode){
+    getStatusName(code,yj){
+      if(!code){
         return "未知";
       }
-      let statusName = incode;
-      this.status.map((s)=>{
-        if(s.code == incode){
-          statusName = s.value;
-          return statusName;
+      let statusName = code;
+      if(code == "F"){
+        return "正常";
+      }
+      if(code == "D"){
+        return "故障";
+      }
+      if(code == "T"){
+        if(yj =="01"){
+          return "预警";
+        }
+        if(yj =="10"){
+          return "报警";
+        }
+      }
+      return statusName;
+    },
+    handleSetNewData(code,yj) {
+      console.log(code);
+      this.newData = new Array();
+      this.dataList.map((e)=>{
+        if(code == "T"){
+          if(e.YJ == yj){
+            this.newData.push(e);
+          }
+        }else{
+          if(e.ErrFlag == code){
+            this.newData.push(e);
+          }
         }
       });
-      return statusName;
-    }
-  }
+      this.total = this.newData.length;
+      this.getSubList();
+    },
+  },
+
 }
 </script>
 

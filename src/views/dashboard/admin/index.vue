@@ -106,9 +106,10 @@ export default {
         { value: 0, name: '预警' ,itemStyle:{color:"#F19433"}}
       ],
       barChart:[
-        [0, 0, 0,0, 0, 0, 0],
-        [0, 0, 0,0, 0, 0, 0],
-        [0, 0, 0,0, 0, 0, 0]
+        [0, 0, 0,0, 0, 0, 0],//正常
+        [0, 0, 0,0, 0, 0, 0],//故障
+        [0, 0, 0,0, 0, 0, 0],//预警
+        [0, 0, 0,0, 0, 0, 0]//报警
       ],
       barChart222:[],
       azcount:0,
@@ -133,11 +134,12 @@ export default {
   watch: {
     getRealData: {
       handler(newValue,oldValue){ //当词条改变时执行事件
-        // console.log('new',newValue)
+         console.log('new',newValue)
         // console.log('old',oldValue)
         this.reals = newValue;
         this.appendData(newValue);
-      }
+      },
+      deep: true
     }
   },
   mounted() {
@@ -178,7 +180,8 @@ export default {
         this.barChart = [
         [0, 0, 0,0, 0, 0, 0],
         [0, 0, 0,0, 0, 0, 0],
-        [0, 0, 0,0, 0, 0, 0]
+        [0, 0, 0,0, 0, 0, 0],
+         [0, 0, 0,0, 0, 0, 0]
       ], this.barChart222=[];
     },
     async getReals(){
@@ -223,46 +226,53 @@ export default {
         var days = this.dataweek[i];
         if(days== fdate){
           this.actualData[i]+=item.TTime;
-          //故障标志位，T有故障，F无故障，D离线
-          if(item.ErrFlag == 'T'){
-            this.expectedData[i] ++;
+          //故障标志位，T有警报，F无故障，D离线故障
+          if(item.ErrFlag == 'F'){
             this.barChart[0][i]++;
           }
+          if(item.ErrFlag == 'D'){
 
-          //01预警
-          if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
-            item.ErrTemp=='01' || item.ErrLC3=='01'
-          ){
-            this.expectedData[i] ++;
-            this.barChart[1][i]++;
+            this.barChart[3][i]++;
+          }else if(item.ErrFlag == 'T'){
+            //01预警
+            if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
+              item.ErrTemp=='01' || item.ErrLC3=='01'
+            ){
+              this.barChart[1][i]++;
+              this.expectedData[i] ++;
+            }
+
+            //10报警
+            if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
+              item.ErrTemp=='10' || item.ErrLC3=='10'
+            ){
+              this.barChart[2][i]++;
+              this.expectedData[i] ++;
+            }
           }
-
-          //10预警
-          if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
-            item.ErrTemp=='10' || item.ErrLC3=='10'
-          ){
-            this.expectedData[i] ++;
-            this.barChart[2][i]++;
-          }
-
         }
       }
       this.lineChartData.actualData =this.actualData;
       this.lineChartData.expectedData =this.expectedData;
       this.barChart222 = this.barChart;
     },
-    getStateColor(code){
+    getStateColor(code,yj){
       //{code:"00",value:"正常"},
       //{code:"01",value:"预警"},
       //{code:"10",value:"报警"},
-      if(code == "00"){
+      if(code == "F"){
         return "#65d186";
       }
-      if(code == "01"){
-        return "#f29e3c";
+      if(code == "D"){
+        return "#e0d405";
       }
-      if(code == "10"){
-        return "#E93F33";
+      if(code == "T"){
+        if(yj =="01"){
+          return "#F19433";
+        }
+        if(yj =="10"){
+          return "#E93F33";
+        }
       }
     },
     appendData(data){//近一周状况
@@ -270,52 +280,62 @@ export default {
       var context = this;
       context.azcount= this.reals.length;
       this.reals = this.reals.map((item)=>{
-        item.ErrLeihuaStatusName = this.getStatusName(item.ErrLeihua);
+
         let daye = context.getDayByTime(item.In_Time);
         context.getTTimeCount(item);
-        item.colorss = this.getStateColor(item.ErrLeihua);
+
         //totalList计算total
-        //故障标志位，T有故障，F无故障，D离线
+        //故障标志位，T有警报，F无故障，D离线=故障
         if(item.ErrFlag == 'F'){
           context.pieChartData[0].value ++;
         }
         if(item.ErrFlag == 'T'){
-          context.pieChartData[1].value ++;
+            //01预警
+            if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
+              item.ErrTemp=='01' || item.ErrLC3=='01'
+            ){
+              context.pieChartData[3].value ++;
+              item.YJ="01";
+            }
+
+            //10预警
+            if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
+              item.ErrTemp=='10' || item.ErrLC3=='10'
+            ){
+              context.pieChartData[2].value ++;
+              item.YJ="10";
+            }
         }
         if(item.ErrFlag == 'D'){
-          // context.totalList[4].count ++;
+          context.pieChartData[1].value ++;
         }else{
           // context.zxcount++;
         }
         // context.azcount++;
-
-        //01预警
-        if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
-          item.ErrTemp=='01' || item.ErrLC3=='01'
-        ){
-          context.pieChartData[3].value ++;
-        }
-
-        //10预警
-        if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
-          item.ErrTemp=='10' || item.ErrLC3=='10'
-        ){
-          context.pieChartData[2].value ++;
-        }
+        item.colorss = this.getStateColor(item.ErrFlag,item.YJ);
+        item.ErrLeihuaStatusName = this.getStatusName(item.ErrFlag,item.YJ);
         return item;
       });
     },
-    getStatusName(incode){
-      if(!incode){
+    getStatusName(code,yj){
+      if(!code){
         return "未知";
       }
-      let statusName = incode;
-      this.status.map((s)=>{
-        if(s.code == incode){
-          statusName = s.value;
-          return statusName;
+      let statusName = code;
+      if(code == "F"){
+        return "正常";
+      }
+      if(code == "D"){
+        return "故障";
+      }
+      if(code == "T"){
+        if(yj =="01"){
+          return "预警";
         }
-      });
+        if(yj =="10"){
+          return "报警";
+        }
+      }
       return statusName;
     },
   }

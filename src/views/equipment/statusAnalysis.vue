@@ -185,18 +185,23 @@ export default {
     this.getList();
   },
   methods: {
-    getStateColor(code){
+    getStateColor(code,yj){
       //{code:"00",value:"正常"},
       //{code:"01",value:"预警"},
       //{code:"10",value:"报警"},
-      if(code == "00"){
+      if(code == "F"){
         return "#65d186";
       }
-      if(code == "01"){
-        return "#f29e3c";
+      if(code == "D"){
+        return "#e0d405";
       }
-      if(code == "10"){
-        return "#f67287";
+      if(code == "T"){
+        if(yj =="01"){
+          return "#F19433";
+        }
+        if(yj =="10"){
+          return "#E93F33";
+        }
       }
     },
     getList() {
@@ -211,38 +216,43 @@ export default {
       fetchEvent(obj).then(response => {
         var context = this;
         this.dataList = response.responseBody.map((e)=>{
-           e.ErrLeihuaStatusName = this.getStatusName(e.ErrLeihua);
+           //e.ErrLeihuaStatusName = this.getStatusName(e.ErrLeihua);
 
-           e.colorss = this.getStateColor(e.ErrLeihua);
+          // e.colorss = this.getStateColor(e.ErrLeihua);
           //totalList计算total
           //故障标志位，T有故障，F无故障，D离线
           if(e.ErrFlag == 'F'){
             context.pieChartData[0].value ++;
-          }
+          }else
           if(e.ErrFlag == 'T'){
-            context.pieChartData[1].value ++;
-          }
+              //01预警
+              if(e.ErrThunder=='01' ||e.ErrLeihua=='01' ||e.ErrLC1=='01' ||e.ErrLC2=='01' ||
+                e.ErrTemp=='01' || e.ErrLC3=='01'
+              ){
+                context.pieChartData[3].value ++;
+                e.YJ="01";
+              }
+
+              //10预警
+              if(e.ErrThunder=='10' ||e.ErrLeihua=='10' ||e.ErrLC1=='10' ||e.ErrLC2=='10' ||
+                e.ErrTemp=='10' || e.ErrLC3=='10'
+              ){
+                context.pieChartData[2].value ++;
+                e.YJ="10";
+              }
+          }else
           if(e.ErrFlag == 'D'){
-            context.totalList[4].count ++;
+            //context.totalList[4].count ++;
+            context.pieChartData[1].value ++;
           }else{
             context.zxcount++;
           }
           context.azcount++;
 
-          //01预警
-          if(e.ErrThunder=='01' ||e.ErrLeihua=='01' ||e.ErrLC1=='01' ||e.ErrLC2=='01' ||
-            e.ErrTemp=='01' || e.ErrLC3=='01'
-          ){
-            context.pieChartData[3].value ++;
-          }
 
-          //10预警
-          if(e.ErrThunder=='10' ||e.ErrLeihua=='10' ||e.ErrLC1=='10' ||e.ErrLC2=='10' ||
-            e.ErrTemp=='10' || e.ErrLC3=='10'
-          ){
-            context.pieChartData[2].value ++;
-          }
           this.getTTimeCount(e);
+          e.colorss = this.getStateColor(e.ErrFlag,e.YJ);
+          e.ErrLeihuaStatusName = this.getStatusName(e.ErrFlag,e.YJ);
           return e;
         });
         this.loading = false
@@ -277,10 +287,11 @@ export default {
             if(item.ErrFlag == 'F'){
               context.statusChart[i].barChartData[0].value ++;
             }
-            if(item.ErrFlag == 'T'){
+            if(item.ErrFlag == 'D'){
               context.statusChart[i].barChartData[1].value ++;
             }
-            //01预警
+            if(item.ErrFlag == 'T'){
+              //01预警
               if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
                 item.ErrTemp=='01' || item.ErrLC3=='01'
               ){
@@ -293,21 +304,31 @@ export default {
               ){
                 context.statusChart[i].barChartData[2].value ++;
               }
+            }
+
           }
         });
       }
     },
-    getStatusName(incode){
-      if(!incode){
+    getStatusName(code,yj){
+      if(!code){
         return "未知";
       }
-      let statusName = incode;
-      this.status.map((s)=>{
-        if(s.code == incode){
-          statusName = s.value;
-          return statusName;
+      let statusName = code;
+      if(code == "F"){
+        return "正常";
+      }
+      if(code == "D"){
+        return "故障";
+      }
+      if(code == "T"){
+        if(yj =="01"){
+          return "预警";
         }
-      });
+        if(yj =="10"){
+          return "报警";
+        }
+      }
       return statusName;
     },
     getWeek (day) {

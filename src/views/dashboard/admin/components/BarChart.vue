@@ -114,6 +114,20 @@ export default {
               color: "#65d186",
             },
           }
+        },{
+          name: '故障',
+          type: 'bar',
+          stack: 'vistors',
+          barWidth: '60%',
+          data: chartData[3],//[79, 52, 200, 334, 390, 330, 220],
+          animationDuration,
+          itemStyle: {
+            //通常情况下：
+            normal: {
+              //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+              color: "#e0d405",
+            },
+          }
         }, {
           name: '预警',
           type: 'bar',

@@ -67,7 +67,10 @@ export default {
         title: {
           text: '雷击次数折线图',
           subtext: '',
-          left: 'left'
+          left: 'left',
+          textStyle:{
+            fontSize: 16,
+          },
         },
         xAxis: {
           data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
