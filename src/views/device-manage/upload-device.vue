@@ -95,7 +95,7 @@ export default {
 
       var countIndex =0;
      dataList.map((node)=>{
-       node.delete =1;
+       node.delete =0;
         //保存数据
         var query={
           url:"nodes",

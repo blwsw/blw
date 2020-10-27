@@ -118,6 +118,10 @@ export default {
     },
     appendData(){
       var context = this;
+      this.zccount=0,
+        this.gzcount=0,
+        this.yjcount=0,
+        this.bjcount=0,
       this.relas.map((item)=>{
           //故障标志位，T有故障，F无故障，D离线
           if(item.ErrFlag == 'F'){

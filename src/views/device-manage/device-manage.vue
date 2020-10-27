@@ -147,10 +147,10 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             修改
           </el-button>
-          <el-button v-if="row.delete!='0'" size="mini" type="success" @click="handleModifyStatus(row,'1')">
+          <el-button v-if="row.delete!='0'" size="mini" type="success" @click="handleModifyStatus(row,'0')">
             启用
           </el-button>
-          <el-button v-if="row.delete!='1'" size="mini" @click="handleModifyStatus(row,'0')">
+          <el-button v-if="row.delete!='1'" size="mini" @click="handleModifyStatus(row,'1')">
             禁用
           </el-button>
           <!--

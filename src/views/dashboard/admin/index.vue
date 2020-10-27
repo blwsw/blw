@@ -102,8 +102,8 @@ export default {
         // { value: 0, name: '报警' ,itemStyle:{color:"#f67287"}},
        // { value: 0, name: '正常' ,itemStyle:{color:"#3567EF"}},
         { value: 0, name: '故障',itemStyle:{color:"#e0d405"} },
+        { value: 0, name: '预警' ,itemStyle:{color:"#F19433"}},
         { value: 0, name: '报警' ,itemStyle:{color:"#E93F33"}},
-        { value: 0, name: '预警' ,itemStyle:{color:"#F19433"}}
       ],
       barChart:[
         [0, 0, 0,0, 0, 0, 0],//正常
@@ -164,8 +164,8 @@ export default {
       this.pieChartData=[
         { value: 0, name: '正常' ,itemStyle:{color:"#65d186"}},
         { value: 0, name: '故障',itemStyle:{color:"#e0d405"} },
+        { value: 0, name: '预警' ,itemStyle:{color:"#F19433"}},
         { value: 0, name: '报警' ,itemStyle:{color:"#E93F33"}},
-        { value: 0, name: '预警' ,itemStyle:{color:"#F19433"}}
       ];
       this.lineChartData.expectedData =this.expectedData;
       this.barChart222 = this.barChart;
@@ -244,7 +244,7 @@ export default {
 
             //10报警
             if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
-              item.ErrTemp=='10' || item.ErrLC3=='10'
+              item.ErrTemp=='10' || item.ErrLC3=='10' || item.Switch1 =='1' || item.Switch2 =='1' || item.Switch3 =='1' || item.Switch4 =='1'
             ){
               this.barChart[2][i]++;
               this.expectedData[i] ++;
@@ -294,15 +294,15 @@ export default {
             if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
               item.ErrTemp=='01' || item.ErrLC3=='01'
             ){
-              context.pieChartData[3].value ++;
+              context.pieChartData[2].value ++;
               item.YJ="01";
             }
 
-            //10预警
+            //10报警
             if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
-              item.ErrTemp=='10' || item.ErrLC3=='10'
+              item.ErrTemp=='10' || item.ErrLC3=='10' || item.Switch1 =='1' || item.Switch2 =='1' || item.Switch3 =='1' || item.Switch4 =='1'
             ){
-              context.pieChartData[2].value ++;
+              context.pieChartData[3].value ++;
               item.YJ="10";
             }
         }

@@ -47,37 +47,37 @@
       </template>
     </el-table-column>
 
-    <el-table-column min-width="40px" label="故障标志位" show-overflow-tooltip>
+    <el-table-column min-width="40px" label="故障标志" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.ErrFlag |statusFilter}}</span>
       </template>
     </el-table-column>
-    <el-table-column min-width="40px" label="雷击故障代码" show-overflow-tooltip>
+    <el-table-column min-width="40px" label="雷击故障" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.ErrThunder |GZFilter}}</span>
       </template>
     </el-table-column>
-    <el-table-column min-width="40px" label="温度故障代码" show-overflow-tooltip>
+    <el-table-column min-width="40px" label="温度故障" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.ErrTemp |GZFilter }}</span>
       </template>
     </el-table-column>
-    <el-table-column min-width="40px" label="温度劣化故障代码" show-overflow-tooltip>
+    <el-table-column min-width="40px" label="温度劣化" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.ErrLeihua |GZFilter}}</span>
       </template>
     </el-table-column>
-    <el-table-column min-width="40px" label="漏电劣化1故障代码" show-overflow-tooltip>
+    <el-table-column min-width="40px" label="漏电劣化1" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.ErrLC1 |GZFilter}}</span>
       </template>
     </el-table-column>
-    <el-table-column min-width="40px" label="漏电劣化2故障代码" show-overflow-tooltip>
+    <el-table-column min-width="40px" label="漏电劣化2" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.ErrLC2 |GZFilter}}</span>
       </template>
     </el-table-column>
-    <el-table-column min-width="40px" label="漏电劣化3故障代码" show-overflow-tooltip>
+    <el-table-column min-width="40px" label="漏电劣化3" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.ErrLC3 |GZFilter}}</span>
       </template>

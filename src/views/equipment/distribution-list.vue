@@ -3,7 +3,7 @@
 
     <el-row :gutter="15" class="panel-group">
       <el-col :xs="8" :sm="8" :md="4" :lg="3" class="card-panel-col" v-for="node in pageData">
-        <el-card class="box-card" body-style="padding:5px;" v-bind:class="{ 'bicon-people': node.ErrFlag=='F','bicon-message': node.ErrFlag=='D' ,'bicon-outling': node.YJ=='01' }">
+        <el-card class="box-card" body-style="padding:5px;" v-bind:class="{ 'bicon-people': node.ErrFlag=='F','bicon-message': node.ErrFlag=='D' ,'bicon-money': node.YJ=='01','bicon-shopping': node.YJ=='10' }">
           <div slot="header" class="clearfix spanaa">
             <i class="el-icon-warning-outline" />
             <span>{{node.addr}}</span>
@@ -17,8 +17,11 @@
               <div class="card-panel-icon-wrapper icon-message" v-if="node.ErrFlag =='D'">
                 <i class="el-icon-warning card-panel-icon" />
               </div>
-              <div class="card-panel-icon-wrapper icon-outling" v-if="node.YJ =='01'">
-                <i class="el-icon-circle-close card-panel-icon" />
+              <div class="card-panel-icon-wrapper icon-money" v-if="node.YJ =='01'">
+                <i class="el-icon-message-solid card-panel-icon" />
+              </div>
+              <div class="card-panel-icon-wrapper icon-shopping" v-if="node.YJ =='10'">
+                <i class="el-icon-sunrise-1 card-panel-icon" />
               </div>
               <div class="card-panel-description">
                 <div class="card-panel-text">
@@ -111,6 +114,7 @@ import DropdownMenu from '@/components/Share/DropdownMenu'
 import waves from '@/directive/waves/index.js' // 水波纹指令
 import {fetchEvent} from "@/api/article";
 import Pagination from "@/components/Pagination/index";
+import store from "@/store";
 export default {
   name: 'DistributionList',
   components: {
@@ -134,8 +138,10 @@ export default {
     return {
       loading:false,
       dataList: [],
+      list:[],
       newData:[],
       pageData:[],
+      yjData:[],
       zxcount:0,
       azcount:0,
       totalList: [
@@ -158,8 +164,30 @@ export default {
     }
   },
   created() {
-    this.getList()
+    //this.getList()
 
+  },
+  mounted() {
+    this.list = this.$store.state.app.reals;
+    if(!this.list || this.list.length ==0){
+      this.list =  store.dispatch('app/getReals',{reload:true} )
+      this.list=[];
+    }
+    this.getList();
+  },
+  computed: { //          监听词条
+    getReals(){
+      return this.$store.state.app.reals
+    }
+  },
+  watch: {
+    getReals: {
+      handler(newValue,oldValue){ //当词条改变时执行事件
+        this.list = newValue;
+        this.getList();
+      },
+      deep: true
+    }
   },
   methods:{
     getSubList() {
@@ -171,16 +199,28 @@ export default {
     },
     getList() {
       this.loading = true
+      this.newData=[],
+      this.pageData=[],
+      this.zxcount=0,
+      this.azcount=0,
+        this.yjData=[],
+      this.totalList= [
+        {count:0,lable:"正常台数",icon:"el-icon-video-play",code:"F"},
+        {count:0,lable:"故障台数",icon:"el-icon-warning",code:"D"},
+        {count:0,lable:"预警台数",icon:"el-icon-message-solid",code:"T",YJ:"01"},
+        {count:0,lable:"报警台数",icon:"el-icon-sunrise-1",code:"T",YJ:"10"},
+        //{count:0,lable:"离线台数",icon:"el-icon-circle-close"},
+      ],
       // this.$emit('create') // for test
-      var obj = {
-        url: 'get/reals',
-        data: {
-          currentPage:1,
-          pageSize:10000
-        }
-      }
-      fetchEvent(obj).then(response => {
-        this.dataList = response.responseBody.map((e)=>{
+      // var obj = {
+      //   url: 'get/reals',
+      //   data: {
+      //     currentPage:1,
+      //     pageSize:10000
+      //   }
+      // }
+      // fetchEvent(obj).then(response => {
+        this.dataList = this.list.map((e)=>{
           e.ErrLeihuaStatusName = this.getStatusName(e.ErrLeihua);
           //totalList计算total
           //故障标志位，T有故障，F无故障，D离线
@@ -194,15 +234,18 @@ export default {
           }
           if(e.ErrFlag == 'T'){
             //01预警
-            if(item.ErrThunder=='01' ||item.ErrLeihua=='01' ||item.ErrLC1=='01' ||item.ErrLC2=='01' ||
-              item.ErrTemp=='01' || item.ErrLC3=='01'
+            if(e.ErrThunder=='01' ||e.ErrLeihua=='01' ||e.ErrLC1=='01' ||e.ErrLC2=='01' ||
+              e.ErrTemp=='01' || e.ErrLC3=='01'
             ){
               this.totalList[2].count ++;
               e.YJ="01";
+              e.ErrLeihuaStatusName = this.getStatusName(e.ErrFlag,e.YJ);
+              this.yjData.push(e);
             }
             //10报警
-            if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
-              item.ErrTemp=='10' || item.ErrLC3=='10'
+            if(e.ErrThunder=='10' ||e.ErrLeihua=='10' ||e.ErrLC1=='10' ||e.ErrLC2=='10' ||
+              e.ErrTemp=='10' || e.ErrLC3=='10'
+              || e.Switch1 =='1' || e.Switch2 =='1' || e.Switch3 =='1' || e.Switch4 =='1'
             ){
               this.totalList[3].count ++;
               e.YJ="10";
@@ -216,7 +259,7 @@ export default {
         this.loading = false
         this.total = this.newData.length;
         this.getSubList();
-      })
+      // })
     },
     getStatusName(code,yj){
       if(!code){
@@ -244,8 +287,10 @@ export default {
       this.newData = new Array();
       this.dataList.map((e)=>{
         if(code == "T"){
-          if(e.YJ == yj){
+          if(e.YJ == yj && yj == "10"){
             this.newData.push(e);
+          }else{
+            this.newData = this.yjData;
           }
         }else{
           if(e.ErrFlag == code){

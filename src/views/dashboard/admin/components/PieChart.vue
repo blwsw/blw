@@ -63,7 +63,7 @@ export default {
     },
     setOptions(picChartData,legendData){
       if(!legendData){
-        legendData = ['正常', '故障', '报警', '预警'];
+        legendData = ['正常', '故障', '预警', '报警'];
       }
       this.chart.setOption({
         title: {
