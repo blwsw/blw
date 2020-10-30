@@ -21,6 +21,7 @@ import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
 import store from "@/store";
+import {MessageBox} from "element-ui";
 
 export default {
   name: 'Layout',
@@ -115,7 +116,18 @@ export default {
           }
 
           store.dispatch('app/setReals',this.relas)
-        }else{
+        }
+        else if(redata.type == 'nsservece'){
+          var newData = redata.data;
+          if(newData){
+            MessageBox.alert('采集服务连接超时，后台已触发服务初始化接口，请确认采集服务是否正常运行!', '采集服务连接超时', {
+              confirmButtonText: '确定',
+              cancelButtonText: '关闭',
+              type: 'warning'
+            })
+          }
+        }
+        else{
           var newData = redata.data;
           //console.log(newData)
           store.dispatch('app/setNodes',newData)
