@@ -73,6 +73,7 @@ import TodoList from './components/TodoList'
 import BoxCard from './components/BoxCard'
 import {parseTime} from "@/utils";
 import store from "@/store";
+import {fetchEvent} from "@/api/article";
 
 
 export default {
@@ -123,7 +124,8 @@ export default {
         {code:"00",value:"正常"},
         {code:"01",value:"预警"},
         {code:"10",value:"报警"},
-      ]
+      ],
+      historyData:[],
     }
   },
   computed: { //          监听词条
@@ -143,7 +145,7 @@ export default {
     }
   },
   mounted() {
-    //this.appendData(this.reals);
+
   },
   created() {
     var day = null;
@@ -221,10 +223,11 @@ export default {
     },
     getTTimeCount(item){ //获取雷击数
       //本年月份的雷击次数
-      var fdate = this.getDayByTime(item.In_Time);
-      for(var i=0;i<this.dataweek.length;i++){
-        var days = this.dataweek[i];
-        if(days== fdate){
+      //var fdate = this.getDayByTime(item.In_Time);
+      var i=6;
+      // for(var i=0;i<this.dataweek.length;i++){
+      //   var days = this.dataweek[i];
+      //   if(days== fdate){
           this.actualData[i]+=item.TTime;
           //故障标志位，T有警报，F无故障，D离线故障
           if(item.ErrFlag == 'F'){
@@ -250,8 +253,8 @@ export default {
               this.expectedData[i] ++;
             }
           }
-        }
-      }
+      //   }
+      // }
       this.lineChartData.actualData =this.actualData;
       this.lineChartData.expectedData =this.expectedData;
       this.barChart222 = this.barChart;
@@ -281,7 +284,6 @@ export default {
       context.azcount= this.reals.length;
       this.reals = this.reals.map((item)=>{
 
-        let daye = context.getDayByTime(item.In_Time);
         context.getTTimeCount(item);
 
         //totalList计算total
@@ -316,6 +318,7 @@ export default {
         item.ErrLeihuaStatusName = this.getStatusName(item.ErrFlag,item.YJ);
         return item;
       });
+      this.getHistory();
     },
     getStatusName(code,yj){
       if(!code){
@@ -338,6 +341,55 @@ export default {
       }
       return statusName;
     },
+    getHistory(){
+      if(this.historyData.length >0){
+        this.hisData(this.historyData);
+      }else{
+        this.loading = true
+        var obj = {
+          url: 'get/history/tj/count',
+          data: {
+            currentPage:1,
+            pageSize:10000
+          }
+        }
+        var context = this;
+        fetchEvent(obj).then(response => {
+          context.historyData = response.responseBody;
+          context.hisData(response.responseBody);
+        })
+      }
+    },
+    hisData(hisData){
+      console.log(hisData);
+     var barChart=
+       [
+        [0, 0, 0,0, 0, 0, this.barChart[0][6]],//正常
+        [0, 0, 0,0, 0, 0, this.barChart[1][6]],//故障
+        [0, 0, 0,0, 0, 0, this.barChart[2][6]],//预警
+        [0, 0, 0,0, 0, 0, this.barChart[3][6]]//报警
+      ];
+      hisData.map((e)=>{
+        for(var i=0;i<this.dataweek.length;i++) {
+          var days = this.dataweek[i];
+          if (days == e.In_Time) {
+            this.actualData[i]=e.TTime;
+            barChart[0][i]=e.zccount;
+            barChart[3][i]=e.gzcount;
+            barChart[1][i]=e.yjcount;
+            barChart[2][i]=e.bjcount;
+            this.expectedData[i] +=e.yjcount;
+            this.expectedData[i] +=e.bjcount;
+          }
+        }
+      });
+      var a = {
+        actualData:this.actualData,
+        expectedData:this.expectedData
+      };
+      this.lineChartData =a;
+      this.barChart222 = barChart;
+    }
   }
 }
 </script>

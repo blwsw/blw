@@ -8,12 +8,12 @@
   <el-button :loading="downloadLoading" style="margin:5px;" type="primary" icon="el-icon-document" @click="handlePrint" >
     打印
   </el-button></div>
-  <el-table id="tableList" header-cell-style="background-color: #f5f7fa;color: #909399;font-weight: bold;border-bottom: 1px solid #EBEEF5;" height="600px" :data="list"  border fit highlight-current-row style="width: 100%;" ref="tablelist">
+  <el-table id="tableList4" header-cell-style="background-color: #f5f7fa;color: #909399;font-weight: bold;border-bottom: 1px solid #EBEEF5;" height="600px" :data="list"  border fit highlight-current-row ref="tableList4">
     <el-table-column
       v-loading="loading"
       align="center"
       label="序号"
-      min-width="100px"
+      min-width="60px"
       element-loading-text="请给我点时间！"
     >
       <template slot-scope="scope">
@@ -36,17 +36,17 @@
       </template>
     </el-table-column>
 
-    <el-table-column min-width="90px" label="泄露电流2" show-overflow-tooltip>
+    <el-table-column width="90px" label="泄露电流2" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.LCurrent2 }}</span>
       </template>
     </el-table-column>
-    <el-table-column min-width="90px" label="泄露电流3" show-overflow-tooltip>
+    <el-table-column width="90px" label="泄露电流3" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.LCurrent3 }}</span>
       </template>
     </el-table-column>
-    <el-table-column width="110px" align="center" label="安装位置">
+    <el-table-column min-width="110px" align="center" label="安装位置">
       <template slot-scope="scope">
         <span>{{ scope.row.InstallPos }}</span>
       </template>
@@ -91,7 +91,7 @@ export default {
     return {
       list: [],
       downloadLoading: false,
-      filename: '',
+      filename: '泄露电流',
       autoWidth: true,
       bookType: 'xlsx',
       listQuery: {
@@ -157,7 +157,7 @@ export default {
     },
     handlePrint(){
       var newWindow = window.open('打印窗口','_blank');
-      var docStr = document.getElementById('tableList').innerHTML
+      var docStr = document.getElementById('tableList4').innerHTML
       console.log(docStr)
       newWindow.document.write(docStr);
       //newWindow.document.body.innerHTML = docStr

@@ -5,7 +5,7 @@
       inline
       :model="listQuery"
     >
-      <el-button style="float: right;" v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-button style="float: right;" v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-search" @click="handlePrint">
         打印
       </el-button>
       <el-button style="float: right;margin-right:10px;" v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-upload" @click="handleUpload" v-permission="['admin1','blw']">
@@ -19,7 +19,7 @@
   </div>
 
 
-  <el-table :data="list" header-cell-style="background-color: #f5f7fa;color: #909399;font-weight: bold;border-bottom: 1px solid #EBEEF5;" border fit highlight-current-row >
+  <el-table id="tableList" :data="list" header-cell-style="background-color: #f5f7fa;color: #909399;font-weight: bold;border-bottom: 1px solid #EBEEF5;" border fit highlight-current-row >
     <el-table-column
       v-loading="loading"
       align="center"
@@ -224,9 +224,23 @@ export default {
       this.$router.push({ name: 'upload-history', params: {  }}) //
     },
     handleDownload() {
+      const statusMap = {//故障标志位，T有故障，F无故障，D离线
+        'T': '有故障',
+        'F': '无故障',
+        'D': '离线'
+      }
+      const yjstatusMap = {//00正常01预警10报警
+        '00': '正常',
+        '01': '预警',
+        '10': '报警'
+      }
+      const gzstatusMap = {
+        '1': '故障',
+        '0': '正常'
+      }
       this.downloadLoading = true
       var query={
-        url:"nodes",
+        url:"get/history",
         data: {
           pageSize:10000,
           currentPage:1,
@@ -234,15 +248,33 @@ export default {
         }
       };
       fetchEvent(query).then(response => {
-        this.downloadList = response.responseBody;
+        this.downloadList = response.responseBody.map((e)=>{
+
+          e.ErrFlagName = statusMap[e.ErrFlag];
+          e.ErrThunderName = yjstatusMap[e.ErrThunder];
+          e.ErrTempName =yjstatusMap[e.ErrTemp];
+          e.ErrLeihuaName =yjstatusMap[e.ErrLeihua];
+          e.ErrLC1Name =yjstatusMap[e.ErrLC1];
+          e.ErrLC2Name =yjstatusMap[e.ErrLC2];
+          e.ErrLC3Name =yjstatusMap[e.ErrLC3];
+          e.Switch1Name = gzstatusMap[e.Switch1];
+          e.Switch2Name = gzstatusMap[e.Switch2];
+          e.Switch3Name = gzstatusMap[e.Switch3];
+          e.Switch4Name = gzstatusMap[e.Switch4];
+          return e;
+        });
+
+
+
         import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ["节点地址","安装位置","名称","串口服务器IP","端口","故障标志位","雷击故障代码","温度故障代码","温度劣化故障代码","漏电劣化1故障代码","漏电劣化2故障代码","漏电劣化3故障代码","备注"]
-          const filterVal = ["addr","InstallPos","name","serialserver_ip","serialserver_port","ErrFlag","ErrThunder","ErrTemp","ErrLeihua","ErrLC1","ErrLC2","ErrLC3","descript"]
+          const tHeader = ["节点编号","发生日期","配电箱号","故障标志位","雷击故障","温度故障","温度劣化","漏电劣化1","漏电劣化2","漏电劣化3","脱离器1","脱离器2","脱离器3","脱离器4","安装位置"]
+          const filterVal = ["addr","In_time","pdcNo","ErrFlagName","ErrThunderName","ErrTempName","ErrLeihuaName","ErrLC1Name","ErrLC2Name","ErrLC3Name","Switch1Name","Switch2Name","Switch3Name","Switch4Name","InstallPos"]
+
           const data = this.formatJson(filterVal)
           excel.export_json_to_excel({
             header: tHeader,
             data,
-            filename: '设备列表'
+            filename: '历史记录'
           })
           this.downloadLoading = false
         })
@@ -259,6 +291,16 @@ export default {
       }))
 
     },
+    handlePrint(){
+      var newWindow = window.open('打印窗口','_blank');
+      var docStr = document.getElementById('tableList').innerHTML
+     // console.log(docStr)
+      newWindow.document.write(docStr);
+      //newWindow.document.body.innerHTML = docStr
+      newWindow.document.close();
+      newWindow.print();
+      newWindow.close();
+    }
   }
 }
 </script>

@@ -6,7 +6,7 @@
         <el-card class="box-card" body-style="padding:5px;" v-bind:class="{ 'bicon-people': node.ErrFlag=='F','bicon-message': node.ErrFlag=='D' ,'bicon-money': node.YJ=='01','bicon-shopping': node.YJ=='10' }">
           <div slot="header" class="clearfix spanaa">
             <i class="el-icon-warning-outline" />
-            <span>{{node.addr}}</span>
+            <span>{{node.addr}}</span> &nbsp;&nbsp; &nbsp;&nbsp;
             <span>{{node.pdcNo}}</span>
           </div>
           <div class="component-item">

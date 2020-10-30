@@ -8,18 +8,8 @@
   <el-button :loading="downloadLoading" style="margin:5px;" type="primary" icon="el-icon-document" @click="handlePrint" >
     打印
   </el-button></div>
-  <el-table id="tableList" height="600px"  header-cell-style="background-color: #f5f7fa;color: #909399;font-weight: bold;border-bottom: 1px solid #EBEEF5;" :data="list" border fit highlight-current-row style="width: 100%;" ref="tablelist">
-    <el-table-column
-      v-loading="loading"
-      align="center"
-      label="序号"
-      min-width="100px"
-      element-loading-text="请给我点时间！"
-    >
-      <template slot-scope="scope">
-        <span>{{ scope.row.seqNo }}</span>
-      </template>
-    </el-table-column>
+  <el-table id="tableList" height="600px"  header-cell-style="background-color: #f5f7fa;color: #909399;font-weight: bold;border-bottom: 1px solid #EBEEF5;" :data="list" border fit highlight-current-row  ref="tablelist">
+
     <el-table-column min-width="50px" label="节点编号">
       <template slot-scope="{row}">
         <span>{{ row.addr }}</span>
@@ -31,19 +21,19 @@
       </template>
     </el-table-column>
 
-      <el-table-column v-if="'L1' == type" width="160px" align="center" label="时间" >
+      <el-table-column v-if="'L1' == type" width="200px" align="center" label="时间" >
         <template slot-scope="scope">
           <span>{{ scope.row.In_Time }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column v-if="'L1' == type" min-width="50px" label="雷击次数" show-overflow-tooltip>
+      <el-table-column v-if="'L1' == type" width="80px" align="center" label="雷击次数" show-overflow-tooltip>
         <template slot-scope="{row}">
           <span>{{ row.TTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column v-if="'L5' == type" width="160px" align="center" label="时间">
+      <el-table-column v-if="'L5' == type" width="180px" align="center" label="时间">
         <template slot-scope="scope">
           <span>{{ scope.row.In_Time }}</span>
         </template>
@@ -79,7 +69,7 @@
         <span>{{ row.Switch4 |switchFilter}}</span>
       </template>
     </el-table-column>
-    <el-table-column width="110px" align="center" label="安装位置">
+    <el-table-column min-width="110px" align="center" label="安装位置">
       <template slot-scope="scope">
         <span>{{ scope.row.InstallPos }}</span>
       </template>
@@ -132,7 +122,7 @@ export default {
     return {
       list: [],
       downloadLoading: false,
-      filename: '',
+      filename: '导出文件',
       autoWidth: true,
       bookType: 'xlsx',
       listQuery: {
@@ -184,17 +174,31 @@ export default {
       import('@/vendor/Export2Excel').then(excel => {
         let tHeader = ['序号', '节点编号', '配电箱号', '时间', '雷击次数', '安装位置']
         let filterVal = ['seqNo', 'addr', 'pdcNo', 'In_Time', 'TTime','InstallPos']
+        this.filename = "雷击次数";
         if(this.type =='L5'){
           tHeader = ['序号', '节点编号', '配电箱号', '时间', '劣化状态', '劣化度', '安装位置']
           filterVal = ['seqNo', 'addr', 'pdcNo', 'In_Time', 'ErrLeihuaName', 'Deterior','InstallPos']
+        }
+        if(this.type =='L6'){
+          tHeader = ['序号', '节点编号', '配电箱号', '脱离器1', '脱离器2', '脱离器3','脱离器4','安装位置']
+          filterVal = ['seqNo', 'addr', 'pdcNo', 'Switch1N', 'Switch2N', 'Switch3N','Switch4N','InstallPos']
         }
         const statusMap = {
           '00': '正常',
           '01': '预警',
           '10': '报警'
         }
+        const swithstatusMap = {
+          '1': '故障',
+          '0': '正常'
+        }
         const list = this.list.map((l)=>{
           l.ErrLeihuaName = statusMap[l.ErrLeihua];
+          l.Switch1N = swithstatusMap[l.Switch1];
+          l.Switch2N = swithstatusMap[l.Switch2];
+          l.Switch3N = swithstatusMap[l.Switch3];
+          l.Switch4N = swithstatusMap[l.Switch4];
+
           return l;
         })
         const data = this.formatJson(filterVal, list)
@@ -218,8 +222,8 @@ export default {
       newWindow.print();
       newWindow.close();
     },
-    formatJson(filterVal) {
-      return this.list.map(v => filterVal.map(j => {
+    formatJson(filterVal,list) {
+      return list.map(v => filterVal.map(j => {
         if (j === 'timestamp') {
           return parseTime(v[j])
         } else {

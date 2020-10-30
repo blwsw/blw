@@ -236,8 +236,8 @@ export default {
       loading: false,
       userListOptions: [],
       rules: {
-        image_uri: [{ validator: validateRequire }],
-        title: [{ validator: validateRequire }],
+        serialserver_ip: [{ validator: validateRequire }],
+        addr: [{ validator: validateRequire }],
         content: [{ validator: validateRequire }],
         source_uri: [{ validator: validateSourceUri, trigger: 'blur' }]
       },
@@ -321,6 +321,7 @@ export default {
           this.loading = true
           let methodpost = "post";
           var url = "nodes";
+
           if (this.action) {
             methodpost = "put";
             url = "nodes/"+this.postForm.addr;
@@ -337,6 +338,7 @@ export default {
                 type: 'success',
                 duration: 2000
               })
+              this.draftForm();
               this.listLoading = false
               this.postForm.status = 'published'
             })

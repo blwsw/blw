@@ -8,19 +8,19 @@
   <el-button :loading="downloadLoading" style="margin:5px;" type="primary" icon="el-icon-document" @click="handlePrint" >
     打印
   </el-button></div>
-  <el-table id="tableList" height="600px" :data="list" header-cell-style="background-color: #f5f7fa;color: #909399;font-weight: bold;border-bottom: 1px solid #EBEEF5;" border fit highlight-current-row style="width: 100%;" ref="tablelist">
+  <el-table id="tableList2" height="600px" :data="list" header-cell-style="background-color: #f5f7fa;color: #909399;font-weight: bold;border-bottom: 1px solid #EBEEF5;" border fit highlight-current-row style="width: 100%;" ref="tableList2">
     <el-table-column
       v-loading="loading"
       align="center"
       label="序号"
-      min-width="100px"
+      min-width="60px"
       element-loading-text="请给我点时间！"
     >
       <template slot-scope="scope">
         <span>{{ scope.row.seqNo }}</span>
       </template>
     </el-table-column>
-    <el-table-column min-width="50px" label="节点编号">
+    <el-table-column width="80px" label="节点编号">
       <template slot-scope="{row}">
         <span>{{ row.addr }}</span>
       </template>
@@ -35,12 +35,12 @@
         <span>{{ row.TCurrent }}</span>
       </template>
     </el-table-column>
-    <el-table-column width="160px" align="center" label="发生时间">
+    <el-table-column width="180px" align="center" label="发生时间">
       <template slot-scope="scope">
         <span>{{ scope.row.In_Time }}</span>
       </template>
     </el-table-column>
-    <el-table-column width="110px" align="center" label="安装位置">
+    <el-table-column min-width="110px" align="center" label="安装位置">
       <template slot-scope="scope">
         <span>{{ scope.row.InstallPos }}</span>
       </template>
@@ -151,7 +151,7 @@ export default {
     },
     handlePrint(){
       var newWindow = window.open('打印窗口','_blank');
-      var docStr = document.getElementById('tableList').innerHTML
+      var docStr = document.getElementById('tableList2').innerHTML
       console.log(docStr)
       newWindow.document.write(docStr);
       //newWindow.document.body.innerHTML = docStr

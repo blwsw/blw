@@ -143,18 +143,19 @@ export default {
             { value: 0, name: '报警'},
             { value: 0, name: '预警'}
           ]},
-        // {date:'',barChartData:[
-        //     { value: 0, name: '正常'},
-        //     { value: 0, name: '故障'},
-        //     { value: 0, name: '报警'},
-        //     { value: 0, name: '预警'}
-        //   ]},
+        {date:'',barChartData:[
+            { value: 0, name: '正常'},
+            { value: 0, name: '故障'},
+            { value: 0, name: '报警'},
+            { value: 0, name: '预警'}
+          ]},
       ],
       dataweek:[],
       loading:false,
       dataList: [],
       zxcount:0,
       azcount:0,
+      historyData:[],
       totalList: [
         {count:0,lable:"正常台数",icon:"el-icon-video-play"},
         {count:0,lable:"故障台数",icon:"el-icon-warning"},
@@ -175,7 +176,7 @@ export default {
     this.expectedData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     this.actualData= [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     var day = null;
-    for(let i=0;i<=5;i++){
+    for(let i=0;i<=6;i++){
       day = this.getWeek(-i);
       this.dataweek.push(day);
       this.statusChart[i].date=day;
@@ -235,7 +236,7 @@ export default {
 
               //10预警
               if(e.ErrThunder=='10' ||e.ErrLeihua=='10' ||e.ErrLC1=='10' ||e.ErrLC2=='10' ||
-                e.ErrTemp=='10' || e.ErrLC3=='10'
+                e.ErrTemp=='10' || e.ErrLC3=='10'  || e.Switch1 =='1' || e.Switch2 =='1' || e.Switch3 =='1' || e.Switch4 =='1'
               ){
                 context.pieChartData[2].value ++;
                 e.YJ="10";
@@ -257,6 +258,7 @@ export default {
         });
         this.loading = false
         this.getTimeStatusCounts();
+        this.getHistory();
       })
     },
     getTTimeCount(item){ //获取雷击数
@@ -276,13 +278,12 @@ export default {
     getTimeStatusCounts(){//近一周的状态数据
       // console.log(this.statusChart);
       var context = this;
-      for(var i=0;i<this.dataweek.length;i++){
-
-        var days = this.dataweek[i];
-
+      // for(var i=0;i<this.dataweek.length;i++){
+        // var days = this.dataweek[i];
+        var i=0;
         this.dataList.map((item)=>{
           let daye = context.getDayByTime(item.In_Time);
-          if( days == daye){
+          // if( days == daye){
             //故障标志位，T有故障，F无故障，D离线
             if(item.ErrFlag == 'F'){
               context.statusChart[i].barChartData[0].value ++;
@@ -300,15 +301,15 @@ export default {
 
               //10预警
               if(item.ErrThunder=='10' ||item.ErrLeihua=='10' ||item.ErrLC1=='10' ||item.ErrLC2=='10' ||
-                item.ErrTemp=='10' || item.ErrLC3=='10'
+                item.ErrTemp=='10' || item.ErrLC3=='10'  || item.Switch1 =='1' || item.Switch2 =='1' || item.Switch3 =='1' || item.Switch4 =='1'
               ){
                 context.statusChart[i].barChartData[2].value ++;
               }
             }
 
-          }
+          // }
         });
-      }
+      // }
     },
     getStatusName(code,yj){
       if(!code){
@@ -357,8 +358,48 @@ export default {
       tMonth = this.doHandleMonth(tMonth + 1);
       tDate =  this.doHandleMonth(tDate);
       return tYear+"-"+tMonth+"-"+tDate;
-    }
+    },
+    getHistory(){
+      if(this.historyData.length >0){
+        this.hisData(this.historyData);
+      }else{
+        this.loading = true
+        var obj = {
+          url: 'get/history/tj/count',
+          data: {
+            currentPage:1,
+            pageSize:10000
+          }
+        }
+        var context = this;
+        fetchEvent(obj).then(response => {
+          context.historyData = response.responseBody;
+          context.hisData(response.responseBody);
+        })
+      }
+    },
+    hisData(hisData){
+      console.log(hisData);
+      hisData.map((e)=>{
+        for(var i=1;i<this.dataweek.length;i++) {
+          var days = this.dataweek[i];
+          var barChartData=[
+            { value: 0, name: '正常'},
+            { value: 0, name: '故障'},
+            { value: 0, name: '报警'},
+            { value: 0, name: '预警'}
+          ];
+          if (days == e.In_Time) {
+            barChartData[0].value =e.zccount;
+            barChartData[1].value =e.gzcount;
+            barChartData[3].value =e.yjcount;
+            barChartData[2].value =e.bjcount;
+            this.statusChart[i].barChartData =barChartData;
+          }
+        }
+      });
 
+    }
   }
 }
 </script>
