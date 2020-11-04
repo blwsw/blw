@@ -31,7 +31,7 @@
                   雷击数:{{node.TTime}}
                 </div>
                 <div class="card-panel-text">
-                  劣化状态:{{node.ErrLeihuaStatusName}}
+                  设备状态:{{node.ErrLeihuaStatusName}}
                 </div>
               </div>
             </div>
@@ -42,7 +42,8 @@
 
 
     <el-row :gutter="1" class="panel-group">
-      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+      <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col" >
+        <div @click="handleSetNewData1">
         <el-row :gutter="1" >
           <el-col :xs="12" :sm="12" :lg="12">
             <el-card class="box-card btmtj btmtjbgcolor" >
@@ -67,6 +68,7 @@
             </el-card>
           </el-col>
         </el-row>
+        </div>
       </el-col>
       <el-col :xs="6" :sm="6" :lg="3" class="card-panel-col" v-for="t in totalList">
         <el-card class="box-card" body-style="padding:5px;"  >
@@ -281,6 +283,11 @@ export default {
         }
       }
       return statusName;
+    },
+    handleSetNewData1(){
+      this.newData = this.dataList;
+      this.total = this.newData.length;
+      this.getSubList();
     },
     handleSetNewData(code,yj) {
       console.log(code);

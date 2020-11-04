@@ -89,30 +89,40 @@ export default {
         header.map((key)=>{
           obj[calendarTypeKeyValue[key]] = item[key];
         })
+          obj.delete =0;
         return obj;
       });
       console.log(dataList);
 
-      var countIndex =0;
-     dataList.map((node)=>{
-       node.delete =0;
-        //保存数据
-        var query={
-          url:"nodes",
-          data:node,
-          methods:"post"
-        };
-         fetchEvent(query).then(response => {
-          countIndex++;
-          if(countIndex == dataList.length){
-            this.$router.push({ name: 'deviceManage', params: { id:"" }}) //
-          }
+      var query={
+        url:"nodes/batch",
+        data:dataList,
+        methods:"post"
+      };
+      fetchEvent(query).then(response => {
+        this.$message({
+          message: '保存成功.',
+          type: 'success'
         })
-      });
-      this.$message({
-        message: '保存成功.',
-        type: 'success'
+          this.$router.push({ name: 'deviceManage', params: { id:"" }}) //
       })
+     //  var countIndex =0;
+     // dataList.map((node)=>{
+     //   node.delete =0;
+     //    //保存数据
+     //    var query={
+     //      url:"nodes",
+     //      data:node,
+     //      methods:"post"
+     //    };
+     //     fetchEvent(query).then(response => {
+     //      countIndex++;
+     //      if(countIndex == dataList.length){
+     //        this.$router.push({ name: 'deviceManage', params: { id:"" }}) //
+     //      }
+     //    })
+     //  });
+
 
     }
   }

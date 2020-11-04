@@ -14,13 +14,15 @@
 const calendarTypeOptions = [
   { key: '节点编号', display_name: 'addr' },
   { key: '节点地址', display_name: 'addr' },
-  { key: '故障标志位', display_name: 'ErrFlag' },
-  { key: '雷击故障代码', display_name: 'ErrThunder' },
-  { key: '温度故障代码', display_name: 'ErrTemp' },
-  { key: '温度劣化故障代码', display_name: 'ErrLeihua' },
-  { key: '漏电劣化1故障代码', display_name: 'ErrLC1' },
-  { key: '漏电劣化2故障代码', display_name: 'ErrLC2' },
-  { key: '漏电劣化3故障代码', display_name: 'ErrLC3' },
+
+  { key: '发生日期', display_name: 'In_Time' },
+  { key: '设备状态', display_name: 'ErrFlag' },
+  { key: '雷击状态', display_name: 'ErrThunder' },
+  { key: '温度状态', display_name: 'ErrTemp' },
+  { key: '温度劣化', display_name: 'ErrLeihua' },
+  { key: '漏电劣化1', display_name: 'ErrLC1' },
+  { key: '漏电劣化2', display_name: 'ErrLC2' },
+  { key: '漏电劣化3', display_name: 'ErrLC3' },
   { key: '端口', display_name: 'serialserver_port' },
   { key: '雷击电流报警设定值', display_name: 'TCurrentAlarm' },
   { key: '温度报警设定值', display_name: 'TAlarm' },
@@ -38,7 +40,7 @@ const calendarTypeOptions = [
   { key: '漏电流1', display_name: 'TCurrent1' },
   { key: '漏电流2', display_name: 'TCurrent2' },
   { key: '漏电流3', display_name: 'TCurrent3' },
-  { key: '配电柜', display_name: 'PDC' },
+  { key: '安装位置', display_name: 'InstallPos' },
 ]
 
 // arr to obj, such as { CN : "China", US : "USA" }
@@ -85,36 +87,74 @@ export default {
          return false
        }
       this.listLoading = true
-
+      const statusMap = {//设备状态，T有故障，F无故障，D离线
+        '有故障':'T',
+        '无故障':'F',
+        '离线':'D'
+      }
+      const yjstatusMap = {//00正常01预警10报警
+        '正常':'00',
+        '预警':'01' ,
+        '报警':'10'
+      }
+      const gzstatusMap = {
+        '报警':'1',
+        '正常':'0'
+    }
       //转换json数据
       var dataList = results.map((item)=>{
         let obj = {};
         header.map((key)=>{
           obj[calendarTypeKeyValue[key]] = item[key];
         })
+
+        obj.ErrFlag = statusMap[obj.ErrFlag];
+        obj.ErrThunder = yjstatusMap[obj.ErrThunder];
+        obj.ErrTemp =yjstatusMap[obj.ErrTemp];
+        obj.ErrLeihua =yjstatusMap[obj.ErrLeihua];
+        obj.ErrLC1 =yjstatusMap[obj.ErrLC1];
+        obj.ErrLC2 =yjstatusMap[obj.ErrLC2];
+        obj.ErrLC3 =yjstatusMap[obj.ErrLC3];
+        obj.Switch1 = gzstatusMap[obj.Switch1];
+        obj.Switch2 = gzstatusMap[obj.Switch2];
+        obj.Switch3 = gzstatusMap[obj.Switch3];
+        obj.Switch4 = gzstatusMap[obj.Switch4];
         return obj;
       });
       console.log(dataList);
 
-      var countIndex =0;
-     dataList.map((node)=>{
-        //保存数据
-        var query={
-          url:"history",
-          data:node,
-          methods:"post"
-        };
-         fetchEvent(query).then(response => {
-          countIndex++;
-          if(countIndex == dataList.length){
-            this.$router.push({ name: 'historys', params: { id:"" }}) //
-          }
+
+
+      // /batch/historys
+      var query={
+        url:"batch/historys",
+        data:dataList,
+        methods:"post"
+      };
+      fetchEvent(query).then(response => {
+        this.$message({
+          message: '保存成功.',
+          type: 'success'
         })
-      });
-      this.$message({
-        message: '保存成功.',
-        type: 'success'
+          this.$router.push({ name: 'historys', params: { id:"" }}) //
       })
+
+     //  var countIndex =0;
+     // dataList.map((node)=>{
+     //    //保存数据
+     //    var query={
+     //      url:"history",
+     //      data:node,
+     //      methods:"post"
+     //    };
+     //     fetchEvent(query).then(response => {
+     //      countIndex++;
+     //      if(countIndex == dataList.length){
+     //        this.$router.push({ name: 'historys', params: { id:"" }}) //
+     //      }
+     //    })
+     //  });
+
 
     }
   }

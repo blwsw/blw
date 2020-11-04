@@ -47,17 +47,17 @@
       </template>
     </el-table-column>
 
-    <el-table-column min-width="40px" label="故障标志" show-overflow-tooltip>
+    <el-table-column min-width="40px" label="设备状态" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.ErrFlag |statusFilter}}</span>
       </template>
     </el-table-column>
-    <el-table-column min-width="40px" label="雷击故障" show-overflow-tooltip>
+    <el-table-column min-width="40px" label="雷击状态" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.ErrThunder |GZFilter}}</span>
       </template>
     </el-table-column>
-    <el-table-column min-width="40px" label="温度故障" show-overflow-tooltip>
+    <el-table-column min-width="40px" label="温度状态" show-overflow-tooltip>
       <template slot-scope="{row}">
         <span>{{ row.ErrTemp |GZFilter }}</span>
       </template>
@@ -126,7 +126,7 @@ export default {
   directives: { waves ,permission},
   filters: {
     statusFilter(status) {
-      const statusMap = {//故障标志位，T有故障，F无故障，D离线
+      const statusMap = {//设备状态，T有故障，F无故障，D离线
         'T': '有故障',
         'F': '无故障',
         'D': '离线'
@@ -143,7 +143,7 @@ export default {
     },
     switchFilter(status) {//开关量1，0关，1开  = 开关量（1：故障 0：正常） 脱离器
       const statusMap = {
-        '1': '故障',
+        '1': '报警',
         '0': '正常'
       }
       return statusMap[status]
@@ -224,7 +224,7 @@ export default {
       this.$router.push({ name: 'upload-history', params: {  }}) //
     },
     handleDownload() {
-      const statusMap = {//故障标志位，T有故障，F无故障，D离线
+      const statusMap = {//设备状态，T有故障，F无故障，D离线
         'T': '有故障',
         'F': '无故障',
         'D': '离线'
@@ -235,7 +235,7 @@ export default {
         '10': '报警'
       }
       const gzstatusMap = {
-        '1': '故障',
+        '1': '报警',
         '0': '正常'
       }
       this.downloadLoading = true
@@ -249,7 +249,6 @@ export default {
       };
       fetchEvent(query).then(response => {
         this.downloadList = response.responseBody.map((e)=>{
-
           e.ErrFlagName = statusMap[e.ErrFlag];
           e.ErrThunderName = yjstatusMap[e.ErrThunder];
           e.ErrTempName =yjstatusMap[e.ErrTemp];
@@ -267,8 +266,8 @@ export default {
 
 
         import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ["节点编号","发生日期","配电箱号","故障标志位","雷击故障","温度故障","温度劣化","漏电劣化1","漏电劣化2","漏电劣化3","脱离器1","脱离器2","脱离器3","脱离器4","安装位置"]
-          const filterVal = ["addr","In_time","pdcNo","ErrFlagName","ErrThunderName","ErrTempName","ErrLeihuaName","ErrLC1Name","ErrLC2Name","ErrLC3Name","Switch1Name","Switch2Name","Switch3Name","Switch4Name","InstallPos"]
+          const tHeader = ["节点编号","发生日期","配电箱号","设备状态","雷击状态","温度状态","温度劣化","漏电劣化1","漏电劣化2","漏电劣化3","脱离器1","脱离器2","脱离器3","脱离器4","安装位置"]
+          const filterVal = ["addr","In_Time","pdcNo","ErrFlagName","ErrThunderName","ErrTempName","ErrLeihuaName","ErrLC1Name","ErrLC2Name","ErrLC3Name","Switch1Name","Switch2Name","Switch3Name","Switch4Name","InstallPos"]
 
           const data = this.formatJson(filterVal)
           excel.export_json_to_excel({

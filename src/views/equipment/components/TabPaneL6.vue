@@ -8,7 +8,7 @@
   <el-button :loading="downloadLoading" style="margin:5px;" type="primary" icon="el-icon-document" @click="handlePrint" >
     打印
   </el-button></div>
-  <el-table id="tableList"  height="600px"  header-cell-style="background-color: #f5f7fa;color: #909399;font-weight: bold;border-bottom: 1px solid #EBEEF5;" :data="list" border fit highlight-current-row >
+  <el-table id="tableListL6"  height="600px"  header-cell-style="background-color: #f5f7fa;color: #909399;font-weight: bold;border-bottom: 1px solid #EBEEF5;" :data="list" border fit highlight-current-row >
     <el-table-column min-width="50px" label="节点编号">
       <template slot-scope="{row}">
         <span>{{ row.addr }}</span>
@@ -99,7 +99,7 @@ export default {
     },
     switchFilter(status) {//开关量1，0关，1开  = 开关量（1：故障 0：正常） 脱离器
       const statusMap = {
-        '1': '故障',
+        '1': '报警',
         '0': '正常'
       }
       return statusMap[status]
@@ -213,7 +213,7 @@ export default {
     },
     handlePrint(){
       var newWindow = window.open('打印窗口','_blank');
-      var docStr = document.getElementById('tableList').innerHTML
+      var docStr = document.getElementById('tableListL6').innerHTML
       console.log(docStr)
       newWindow.document.write(docStr);
       //newWindow.document.body.innerHTML = docStr
