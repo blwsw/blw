@@ -292,19 +292,23 @@ export default {
     handleSetNewData(code,yj) {
       console.log(code);
       this.newData = new Array();
-      this.dataList.map((e)=>{
-        if(code == "T"){
-          if(e.YJ == yj && yj == "10"){
-            this.newData.push(e);
+      if(code == "T" && yj == "01"){
+         this.yjData.map(e=>{
+           this.newData.push(e);
+         });
+      }else{
+        this.dataList.map((e)=>{
+          if(code == "T"){
+            if(e.YJ == yj && yj == "10"){
+              this.newData.push(e);
+            }
           }else{
-            this.newData = this.yjData;
+            if(e.ErrFlag == code){
+              this.newData.push(e);
+            }
           }
-        }else{
-          if(e.ErrFlag == code){
-            this.newData.push(e);
-          }
-        }
-      });
+        });
+      }
       this.total = this.newData.length;
       this.getSubList();
     },
