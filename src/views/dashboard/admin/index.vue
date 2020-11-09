@@ -170,6 +170,12 @@ export default {
         { value: 0, name: '报警' ,itemStyle:{color:"#E93F33"}},
       ];
       this.lineChartData.expectedData =this.expectedData;
+      this.barChart=[
+        [0, 0, 0,0, 0, 0, 0],//正常
+        [0, 0, 0,0, 0, 0, 0],//故障
+        [0, 0, 0,0, 0, 0, 0],//预警
+        [0, 0, 0,0, 0, 0, 0]//报警
+      ];
       this.barChart222 = this.barChart;
 
       this.lineChartData ={
